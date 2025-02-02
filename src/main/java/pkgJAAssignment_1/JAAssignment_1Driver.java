@@ -1,6 +1,6 @@
 
 
-package pkgJADriver;
+package pkgJAAssignment_1;
 
 
 import org.joml.Matrix4f;
@@ -16,7 +16,7 @@ import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.system.MemoryUtil.*;
 
 
-public class CSC133JADriver {
+public class JAAssignment_1Driver {
     GLFWErrorCallback errorCallback;
     GLFWKeyCallback keyCallback;
     GLFWFramebufferSizeCallback fbCallback;
@@ -30,7 +30,7 @@ public class CSC133JADriver {
     FloatBuffer myFloatBuffer = BufferUtils.createFloatBuffer(OGL_MATRIX_SIZE);
     int vpMatLocation = 0, renderColorLocation = 0;
     public static void main(String[] args) {
-        new CSC133JADriver().render();
+        new JAAssignment_1Driver().render();
     } // public static void main(String[] args)
     void render() {
         try {
