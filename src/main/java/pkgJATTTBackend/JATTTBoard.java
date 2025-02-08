@@ -41,18 +41,25 @@ public class JATTTBoard {
     public void updateCell(int row, int col) {
         board[row][col] = 'P';
     }
+    private boolean validInput(int row, int col) {
+        if(row > 2 || row < 0 || col > 2 || col < 0) {
+            System.out.println("Input out of bounds. Please enter a valid row/column number");
+            return false;
+        }
+        else if(!isCellFree(row, col)) {
+            System.out.println("Cell is not free. Please enter a valid row/column number");
+            return false;
+        }
+        else {
+            return true;
+        }
+    }
     public void play() {
         while(!isBoardFull()) {
             System.out.print("Enter a row and column: ");
             int row = myScanner.nextInt();
             int col = myScanner.nextInt();
-            if(row > 2 || row < 0 || col > 2 || col < 0) {
-                System.out.println("Invalid row or column");
-            }
-            else if(!isCellFree(row, col)) {
-                System.out.println("Cell is not free");
-            }
-            else {
+            if(validInput(row, col)) {
                 updateCell(row, col);
             }
             printBoard();
