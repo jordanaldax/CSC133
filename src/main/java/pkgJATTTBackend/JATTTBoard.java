@@ -6,10 +6,12 @@ public class JATTTBoard {
     private Scanner myScanner = new Scanner(System.in);
     private char[][] board = new char[3][3];
 
-    // Fills the array with a '-' in each cell when the object is created.
+    // Calls fillArray() when the object is created.
     public JATTTBoard() {
         fillArray();
     }
+
+    // Fills each cell in the array with '-'.
     private void fillArray() {
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
@@ -17,6 +19,8 @@ public class JATTTBoard {
             }
         }
     }
+
+    // Prints the board as a 3x3 grid.
     public void printBoard() {
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
@@ -25,6 +29,7 @@ public class JATTTBoard {
             System.out.println();
         }
     }
+
     public boolean isBoardFull() {
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
@@ -35,12 +40,19 @@ public class JATTTBoard {
         }
         return true;
     }
+
     public boolean isCellFree(int row, int col) {
         return board[row][col] == '-';
     }
+
     private void updateCell(int row, int col) {
         board[row][col] = 'P';
     }
+
+    // Checks if the input from the user is valid. Valid inputs must be values
+    // from 0 to 2 and cannot be in a cell that has already been filled. If the
+    // user's input breaks either of these conditions, a message is printed
+    // telling the user that their input is invalid.
     private boolean validInput(int row, int col) {
         if(row > 2 || row < 0 || col > 2 || col < 0) {
             System.out.println("Input out of bounds. Please enter a valid row/column number");
@@ -54,6 +66,9 @@ public class JATTTBoard {
             return true;
         }
     }
+
+    // Plays through the game, prompting the user for an input until the board
+    // is full. When the board is full, the game ends and prints "Game Over".
     public void play() {
         while(!isBoardFull()) {
             System.out.print("Enter a row and column: ");
