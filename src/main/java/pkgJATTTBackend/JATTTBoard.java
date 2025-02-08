@@ -1,6 +1,9 @@
 package pkgJATTTBackend;
 
+import java.util.Scanner;
+
 public class JATTTBoard {
+    private Scanner myScanner = new Scanner(System.in);
     private char[][] board = new char[3][3];
 
     // Fills the array with a '-' in each cell when the object is created.
@@ -39,6 +42,21 @@ public class JATTTBoard {
         board[row][col] = 'P';
     }
     public void play() {
-        //
+        while(!isBoardFull()) {
+            System.out.print("Enter a row and column: ");
+            int row = myScanner.nextInt();
+            int col = myScanner.nextInt();
+            if(row > 2 || row < 0 || col > 2 || col < 0) {
+                System.out.println("Invalid row or column");
+            }
+            else if(!isCellFree(row, col)) {
+                System.out.println("Cell is not free");
+            }
+            else {
+                updateCell(row, col);
+            }
+            printBoard();
+        }
+        System.out.println("Game Over");
     }
 }
