@@ -38,7 +38,7 @@ public class JATTTBoard {
     public boolean isCellFree(int row, int col) {
         return board[row][col] == '-';
     }
-    public void updateCell(int row, int col) {
+    private void updateCell(int row, int col) {
         board[row][col] = 'P';
     }
     private boolean validInput(int row, int col) {
