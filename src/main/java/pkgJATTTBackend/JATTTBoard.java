@@ -3,6 +3,30 @@ package pkgJATTTBackend;
 import java.util.Scanner;
 
 public class JATTTBoard {
+    private final int ROW = 3, COL = 3;
+    private int totalValidEntries;
+    private char winner_char;
+    private char default_char;
+    private char[][] ttt_board;
+    private char player_char;
+    private char machine_char;
+
+    public char[][] getBoard() {
+        return ttt_board.clone();
+    }
+
+    public void testPlay() {
+
+    }
+
+    public void clearBoard() {
+
+    }
+
+    private boolean updateBoard(int row, int col) {
+        return false;
+    }
+
     private Scanner myScanner = new Scanner(System.in);
     private char[][] board = new char[3][3];
 
@@ -11,7 +35,7 @@ public class JATTTBoard {
         fillArray();
     }
 
-    // Fills each cell in the array with '-'.
+    // Fills each cell in the array with '-'
     private void fillArray() {
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
