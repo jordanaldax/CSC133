@@ -7,7 +7,7 @@ public class JATTTBoard {
     private int totalValidEntries;
     private char winner_char;
     private char default_char;
-    private char[][] ttt_board;
+    private char[][] ttt_board = new char[ROW][COL];
     private char player_char;
     private char machine_char;
 
@@ -28,7 +28,6 @@ public class JATTTBoard {
     }
 
     private Scanner myScanner = new Scanner(System.in);
-    private char[][] board = new char[3][3];
 
     // Calls fillArray() when the object is created.
     public JATTTBoard() {
@@ -39,7 +38,7 @@ public class JATTTBoard {
     private void fillArray() {
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
-                board[i][j] = '-';
+                ttt_board[i][j] = '-';
             }
         }
     }
@@ -48,7 +47,7 @@ public class JATTTBoard {
     public void printBoard() {
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
-                System.out.print(board[i][j] + " ");
+                System.out.print(ttt_board[i][j] + " ");
             }
             System.out.println();
         }
@@ -57,7 +56,7 @@ public class JATTTBoard {
     public boolean isBoardFull() {
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
-                if (board[i][j] == '-') {
+                if (ttt_board[i][j] == '-') {
                     return false;
                 }
             }
@@ -66,11 +65,11 @@ public class JATTTBoard {
     }
 
     public boolean isCellFree(int row, int col) {
-        return board[row][col] == '-';
+        return ttt_board[row][col] == '-';
     }
 
     private void updateCell(int row, int col) {
-        board[row][col] = 'P';
+        ttt_board[row][col] = 'P';
     }
 
     // Checks if the input from the user is valid. Valid inputs must be values
