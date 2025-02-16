@@ -66,19 +66,24 @@ public class JATTTBoard {
         }
     }
 
-    public boolean isBoardFull() {
-        for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 3; j++) {
-                if (ttt_board[i][j] == default_char) {
-                    return false;
+    public void play() {
+        while(true) {
+            boolean isFull = true;
+            for(int i = 0; i < ROW; i++) {
+                for(int j = 0; j < COL; j++) {
+                    if(ttt_board[i][j] == default_char) {
+                        isFull = false;
+                        break;
+                    }
+                }
+                if(!isFull) {
+                    break;
                 }
             }
-        }
-        return true;
-    }
+            if(isFull) {
+                break;
+            }
 
-    public void play() {
-        while(!this.isBoardFull()) {
             JAIOManager.printBoard(this);
             JAIOManager.rowColPrompt();
             int[] input = JAIOManager.readIntegerInput(totalValidEntries);
