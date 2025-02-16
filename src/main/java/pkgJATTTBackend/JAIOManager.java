@@ -3,39 +3,58 @@ package pkgJATTTBackend;
 import java.util.Scanner;
 
 public class JAIOManager {
-    private Scanner myScanner = new Scanner(System.in);
+    private static Scanner myScanner = new Scanner(System.in);
 
     private JAIOManager() {
 
     }
 
-    public void cellNotFreeMessage(int row, int col) {
+    public static void cellNotFreeMessage(int row, int col) {
         System.out.println("Cell " + row + ", " + col + " is not free. Please try again.");
     }
 
-    public void rowColPrompt() {
+    public static void rowColPrompt() {
         System.out.print("Enter a row and column: ");
-        int row = myScanner.nextInt();
-        int col = myScanner.nextInt();
     }
 
-    public boolean readQuitInput() {
-        return false;
+    public static boolean readQuitInput() {
+        String tmpString = myScanner.next();
+        char tmpChar = tmpString.charAt(0);
+        if (tmpChar == 'Q' || tmpChar == 'q') {
+            quitGameMessage();
+            System.exit(0);
+            return true;
+        }
+        else {
+            invalidEntryMessage();
+            return false;
+        }
     }
 
-    public void boardCompleteMessage() {
+    public static void boardCompleteMessage() {
         System.out.println("\nGame Over - come again!");
     }
 
-    public int[] readIntegerInput(int x) {
-        return null;
+    public static int[] readIntegerInput(int intsToRead) {
+        if(myScanner.hasNextInt()) {
+            int[] input = new int[intsToRead];
+            for(int i = 0; i < intsToRead; i++) {
+                input[i] = myScanner.nextInt();
+            }
+            myScanner.nextLine();
+            return input;
+        }
+        else {
+            readQuitInput();
+            return null;
+        }
     }
 
-    public void invalidEntryMessage() {
+    public static void invalidEntryMessage() {
         System.out.println("Invalid entry. Please try again.");
     }
 
-    public void printBoard(JATTTBoard my_board) {
+    public static void printBoard(JATTTBoard my_board) {
         char[][] board = my_board.getBoard();
 
         for (int i = 0; i < 3; i++) {
@@ -46,11 +65,11 @@ public class JAIOManager {
         }
     }
 
-    public void initPrompt() {
+    public static void initPrompt() {
         System.out.println("Welcome to the game!");
     }
 
-    public void quitGameMessage() {
+    public static void quitGameMessage() {
         System.out.println("Goodbye!");
     }
 }
