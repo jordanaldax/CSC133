@@ -10,7 +10,7 @@ public class JAIOManager {
     }
 
     public static void cellNotFreeMessage(int row, int col) {
-        System.out.println("Cell " + row + ", " + col + " is not free. Please try again.");
+        System.out.println("Cell [" + row + ", " + col + "] is not free. Please try again.");
     }
 
     public static void rowColPrompt() {
@@ -32,7 +32,7 @@ public class JAIOManager {
     }
 
     public static void boardCompleteMessage() {
-        System.out.println("\nGame Over - come again!");
+        System.out.println("All entries on the board are filled!\nGame Over - come again!\n");
     }
 
     public static int[] readIntegerInput(int intsToRead) {
@@ -63,6 +63,7 @@ public class JAIOManager {
             }
             System.out.println();
         }
+        System.out.println();
     }
 
     public static void initPrompt() {

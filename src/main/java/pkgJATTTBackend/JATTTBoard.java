@@ -1,17 +1,17 @@
 package pkgJATTTBackend;
 
-import static pkgJATTTBackend.JAIOManager.*;
 
 public class JATTTBoard {
     private final int ROW = 3, COL = 3;
-    private int totalValidEntries = 2;
+    private final int totalValidEntries = 2;
     private char winner_char;
-    private char default_char = '-';
-    private char player_char = 'P';
-    private char machine_char = 'X';
-    private char[][] ttt_board = new char[ROW][COL];
+    private final char default_char = '-';
+    private final char player_char = 'P';
+    private final char machine_char = 'X';
+    private final char[][] ttt_board;
 
     public JATTTBoard() {
+        ttt_board = new char[ROW][COL];
         clearBoard();
     }
 
@@ -20,10 +20,27 @@ public class JATTTBoard {
     }
 
     public void testPlay() {
-        JATTTBoard my_board = new JATTTBoard();
-        printBoard(my_board);
-        updateBoard(0,0);
-        printBoard(my_board);
+        this.updateBoard(0,0);
+        JAIOManager.printBoard(this);
+        this.updateBoard(1,1);
+        JAIOManager.printBoard(this);
+        this.updateBoard(2,2);
+        JAIOManager.printBoard(this);
+        System.out.println("Attempt to fill cell [1,1] which is already filled.");
+        this.updateBoard(1,1);
+        this.updateBoard(0,1);
+        JAIOManager.printBoard(this);
+        this.updateBoard(0,2);
+        JAIOManager.printBoard(this);
+        this.updateBoard(1,0);
+        JAIOManager.printBoard(this);
+        this.updateBoard(1,2);
+        JAIOManager.printBoard(this);
+        this.updateBoard(2,0);
+        JAIOManager.printBoard(this);
+        this.updateBoard(2,1);
+        JAIOManager.printBoard(this);
+        JAIOManager.boardCompleteMessage();
     }
 
     public void clearBoard() {
@@ -36,11 +53,11 @@ public class JATTTBoard {
 
     private boolean updateBoard(int row, int col) {
         if(row < 0 || row >= ROW || col < 0 || col >= COL) {
-            invalidEntryMessage();
+            JAIOManager.invalidEntryMessage();
             return false;
         }
         else if(ttt_board[row][col] != default_char) {
-            cellNotFreeMessage(row, col);
+            JAIOManager.cellNotFreeMessage(row, col);
             return false;
         }
         else {
@@ -61,15 +78,15 @@ public class JATTTBoard {
     }
 
     public void play() {
-        JATTTBoard my_board = new JATTTBoard();
-        while(!my_board.isBoardFull()) {
-            printBoard(my_board);
-            rowColPrompt();
-            int[] input = readIntegerInput(totalValidEntries);
+        while(!this.isBoardFull()) {
+            JAIOManager.printBoard(this);
+            JAIOManager.rowColPrompt();
+            int[] input = JAIOManager.readIntegerInput(totalValidEntries);
             if(input != null) {
-                my_board.updateBoard(input[0],input[1]);
+                this.updateBoard(input[0],input[1]);
             }
         }
-        boardCompleteMessage();
+        JAIOManager.boardCompleteMessage();
+        JAIOManager.printBoard(this);
     }
 }
