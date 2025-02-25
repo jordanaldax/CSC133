@@ -9,30 +9,48 @@ public class JAIOManager {
 
     }
 
-    public static void cellNotFreeMessage(int row, int col) {
-        System.out.println("Cell [" + row + ", " + col + "] is not free. Please try again.");
+    public static void initPrompt() {
+        System.out.println("Welcome to the game!");
     }
 
     public static void rowColPrompt() {
         System.out.print("Enter a row and column: ");
     }
 
-    public static boolean readQuitInput() {
-        String tmpString = myScanner.next();
-        char tmpChar = tmpString.charAt(0);
-        if (tmpChar == 'Q' || tmpChar == 'q') {
-            quitGameMessage();
-            System.exit(0);
-            return true;
-        }
-        else {
-            invalidEntryMessage();
-            return false;
-        }
+    public static void cellNotFreeMessage(int row, int col) {
+        System.out.println("Cell [" + row + ", " + col + "] is not free. Please try again.");
+    }
+
+    public static void invalidEntryMessage() {
+        System.out.println("Invalid entry. Please try again.");
+    }
+
+    public static void errorInPlayMessage() {
+        System.out.println("errorInPlayMessage");
     }
 
     public static void boardCompleteMessage() {
         System.out.println("All entries on the board are filled!\nGame Over - come again!\n");
+    }
+
+    public static void playerWinMessage() {
+        System.out.println("Player won!");
+    }
+
+    public static void machineWinMessage() {
+        System.out.println("Machine won!");
+    }
+
+    public static void gameDrawMessage() {
+        System.out.println("Game draw!");
+    }
+
+    public static void quitGameMessage() {
+        System.out.println("Goodbye!");
+    }
+
+    public static void playAgainMessage() {
+        System.out.println("Play again? ");
     }
 
     public static int[] readIntegerInput(int intsToRead) {
@@ -50,8 +68,18 @@ public class JAIOManager {
         }
     }
 
-    public static void invalidEntryMessage() {
-        System.out.println("Invalid entry. Please try again.");
+    public static boolean readQuitInput() {
+        String tmpString = myScanner.next();
+        char tmpChar = tmpString.charAt(0);
+        if (tmpChar == 'Q' || tmpChar == 'q') {
+            quitGameMessage();
+            System.exit(0);
+            return true;
+        }
+        else {
+            invalidEntryMessage();
+            return false;
+        }
     }
 
     public static void printBoard(JATTTBoard my_board) {
@@ -64,13 +92,5 @@ public class JAIOManager {
             System.out.println();
         }
         System.out.println();
-    }
-
-    public static void initPrompt() {
-        System.out.println("Welcome to the game!");
-    }
-
-    public static void quitGameMessage() {
-        System.out.println("Goodbye!");
     }
 }

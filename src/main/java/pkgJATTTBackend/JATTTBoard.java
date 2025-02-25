@@ -1,13 +1,10 @@
 package pkgJATTTBackend;
 
+import static pkgJATTTBackend.JASPOT.*;
 
 public class JATTTBoard {
-    private final int ROW = 3, COL = 3;
     private final int totalValidEntries = 2;
     private char winner_char;
-    private final char default_char = '-';
-    private final char player_char = 'P';
-    private final char machine_char = 'X';
     private final char[][] ttt_board;
 
     public JATTTBoard() {
@@ -19,36 +16,20 @@ public class JATTTBoard {
         return ttt_board.clone();
     }
 
-    public void testPlay() {
-        this.updateBoard(0,0);
-        JAIOManager.printBoard(this);
-        this.updateBoard(1,1);
-        JAIOManager.printBoard(this);
-        this.updateBoard(2,2);
-        JAIOManager.printBoard(this);
-        System.out.println("Attempt to fill cell [1,1] which is already filled.");
-        this.updateBoard(1,1);
-        this.updateBoard(0,1);
-        JAIOManager.printBoard(this);
-        this.updateBoard(0,2);
-        JAIOManager.printBoard(this);
-        this.updateBoard(1,0);
-        JAIOManager.printBoard(this);
-        this.updateBoard(1,2);
-        JAIOManager.printBoard(this);
-        this.updateBoard(2,0);
-        JAIOManager.printBoard(this);
-        this.updateBoard(2,1);
-        JAIOManager.printBoard(this);
-        JAIOManager.boardCompleteMessage();
-    }
-
     public void clearBoard() {
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
                 ttt_board[i][j] = default_char;
             }
         }
+    }
+
+    protected void setWinnerChar(char winner_char) {
+        this.winner_char = winner_char;
+    }
+
+    public void playAgainMessage() {
+        System.out.println("Play again? ");
     }
 
     private boolean updateBoard(int row, int col) {
@@ -66,7 +47,7 @@ public class JATTTBoard {
         }
     }
 
-    public void play() {
+    public int play() {
         while(true) {
             boolean isFull = true;
             for(int i = 0; i < ROW; i++) {
@@ -93,5 +74,33 @@ public class JATTTBoard {
         }
         JAIOManager.boardCompleteMessage();
         JAIOManager.printBoard(this);
+
+        // TEMPORARY RETURN VALUE
+        // REMEMBER TO REMOVE THIS
+        return 0;
+    }
+
+    public void testPlay() {
+        this.updateBoard(0,0);
+        JAIOManager.printBoard(this);
+        this.updateBoard(1,1);
+        JAIOManager.printBoard(this);
+        this.updateBoard(2,2);
+        JAIOManager.printBoard(this);
+        System.out.println("Attempt to fill cell [1,1] which is already filled.");
+        this.updateBoard(1,1);
+        this.updateBoard(0,1);
+        JAIOManager.printBoard(this);
+        this.updateBoard(0,2);
+        JAIOManager.printBoard(this);
+        this.updateBoard(1,0);
+        JAIOManager.printBoard(this);
+        this.updateBoard(1,2);
+        JAIOManager.printBoard(this);
+        this.updateBoard(2,0);
+        JAIOManager.printBoard(this);
+        this.updateBoard(2,1);
+        JAIOManager.printBoard(this);
+        JAIOManager.boardCompleteMessage();
     }
 }
