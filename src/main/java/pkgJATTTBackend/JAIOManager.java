@@ -14,7 +14,7 @@ public class JAIOManager {
     }
 
     public static void rowColPrompt() {
-        System.out.print("Enter a row and column: ");
+        System.out.print("Enter a row and column, or q to quit: ");
     }
 
     public static void cellNotFreeMessage(int row, int col) {

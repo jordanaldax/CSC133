@@ -32,6 +32,8 @@ public class JATTTBoard {
         System.out.println("Play again? ");
     }
 
+    // Game needs to check if someone has won after every input
+    // updateBoard, checkWinner, isBoardFull
     private boolean updateBoard(int row, int col) {
         if(row < 0 || row >= ROW || col < 0 || col >= COL) {
             JAIOManager.invalidEntryMessage();
@@ -47,6 +49,70 @@ public class JATTTBoard {
         }
     }
 
+    // isBoardFull happens before checkWinner
+    //
+    // tmp value equal to first value in array checked
+    // go through array row by row, if char equals tmp value each time, that char is the winner
+    // if no winner through rows, check column by column
+    // if still no winner, check diagonal
+    // if still no winner, then no one has won
+    // int to return different values based on who won
+    private int checkWinner() {
+        char tmp;
+        int count;
+        int winner = GAME_DRAW;
+        // check across row
+        //
+        for (int i = 0; i < ROW; i++) {
+            count = 0;
+            for (int j = 0; j < COL; j++) {
+                tmp = ttt_board[i][j];
+                if(count > 2) {
+                    break;
+                }
+                else if (ttt_board[i][j] == tmp) {
+                    count++;
+                }
+                else {
+                    break;
+                }
+            }
+        }
+        return 0;
+    }
+
+    private boolean isBoardFull() {
+        for (int i = 0; i < ROW; i++) {
+            for (int j = 0; j < COL; j++) {
+                if (ttt_board[i][j] == default_char) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    /*
+        print board
+        prompt user for input
+        check input
+        add input to board
+        print board
+        check if board is full / there's a winner
+            if full, prompt game repeat
+            if no repeat, game over
+        if not full / no winner, machine check board
+        prompt machine
+
+     */
+    public int play() {
+        while(!isBoardFull()) {
+            //
+        }
+        return 0;
+    }
+
+    /*
     public int play() {
         while(true) {
             boolean isFull = true;
@@ -79,6 +145,7 @@ public class JATTTBoard {
         // REMEMBER TO REMOVE THIS
         return 0;
     }
+    */
 
     public void testPlay() {
         this.updateBoard(0,0);
@@ -102,5 +169,35 @@ public class JATTTBoard {
         this.updateBoard(2,1);
         JAIOManager.printBoard(this);
         JAIOManager.boardCompleteMessage();
+    }
+
+    private char winnerConvert(int winner) {
+        if (winner == GAME_MACHINE) {
+            return machine_char;
+        }
+        else if (winner == GAME_PLAYER) {
+            return player_char;
+        }
+        else if (winner == GAME_DRAW) {
+            return 'd';
+        }
+        else {
+            return default_char;
+        }
+    }
+
+    public void testWinner() {
+        for (int i = 0; i < ROW; i++) {
+            ttt_board[i][0] = player_char;
+        }
+        JAIOManager.printBoard(this);
+        System.out.print("Checking winner: " + winnerConvert(this.checkWinner()) + "\n\n");
+        this.clearBoard();
+        for(int i = 0; i < COL; i++) {
+            ttt_board[0][i] = player_char;
+        }
+        JAIOManager.printBoard(this);
+        System.out.print("Checking winner: " + winnerConvert(this.checkWinner()) + "\n");
+        this.clearBoard();
     }
 }

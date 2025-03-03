@@ -9,6 +9,6 @@ public class JASPOT {
     public static int ROW = 3;
     public static int COL = 3;
     public static char default_char = '-';
-    public static char player_char = 'O';
+    public static char player_char = 'P';
     public static char machine_char = 'X';
 }

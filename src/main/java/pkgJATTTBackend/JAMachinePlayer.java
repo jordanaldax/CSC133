@@ -36,7 +36,7 @@ public class JAMachinePlayer {
         return true;
     }
 
-    private int findRepeatsInCol(int col, int row) {
+    private int findRepeatsInCol(int row, int col) {
         return 0;
     }
 
