@@ -59,26 +59,76 @@ public class JATTTBoard {
     // int to return different values based on who won
     private int checkWinner() {
         char tmp;
-        int count;
-        int winner = GAME_DRAW;
+        char winner_char = winner_check;
+        int winner = -1;
+
         // check across row
-        //
-        for (int i = 0; i < ROW; i++) {
-            count = 0;
-            for (int j = 0; j < COL; j++) {
-                tmp = ttt_board[i][j];
-                if(count > 2) {
+        // if it gets to the last col in the row and the
+        // char matches the tmp, that char has won
+        exitLoop:
+        for (int row = 0; row < ROW; row++) {
+            tmp = ttt_board[row][0];
+            for (int col = 0; col < COL; col++) {
+                if (ttt_board[row][col] == default_char) {
                     break;
                 }
-                else if (ttt_board[i][j] == tmp) {
-                    count++;
-                }
-                else {
+                else if (col == COL-1 && ttt_board[row][col] == tmp) {
+                    winner_char = tmp;
+                    break exitLoop;
+                } else if (ttt_board[row][col] != tmp) {
                     break;
                 }
             }
         }
-        return 0;
+
+        // check across col
+        exitLoop:
+        for(int col = 0; col < COL; col++) {
+            tmp = ttt_board[0][col];
+            for(int row = 0; row < ROW; row++) {
+                if (ttt_board[row][col] == default_char) {
+                    break;
+                }
+                else if(row == ROW-1 && ttt_board[row][col] == tmp) {
+                    winner_char = tmp;
+                    break exitLoop;
+                } else if (ttt_board[row][col] != tmp) {
+                    break;
+                }
+            }
+        }
+
+        // check diagonal from top left to bottom right
+        tmp = ttt_board[0][0];
+        for (int i = 0; i < ROW; i++) {
+            if(ttt_board[i][i] != tmp || ttt_board [i][i] == default_char) {
+                break;
+            }
+            else if(ttt_board[ROW-1][COL-1] == tmp) {
+                winner_char = tmp;
+            }
+        }
+
+        // check diagonal from top right to bottom left
+        tmp = ttt_board[0][COL-1];
+        int col = COL-1;
+        for (int row = 0; row < ROW; row++) {
+            if(col == 0) {
+                winner_char = tmp;
+            }
+            else if(ttt_board[row][col] != tmp || ttt_board[row][col] == default_char) {
+                break;
+            }
+            col--;
+        }
+
+        if(winner_char == player_char) {
+            winner = GAME_PLAYER;
+        }
+        else if(winner_char == machine_char) {
+            winner = GAME_MACHINE;
+        }
+        return winner;
     }
 
     private boolean isBoardFull() {
@@ -190,14 +240,43 @@ public class JATTTBoard {
         for (int i = 0; i < ROW; i++) {
             ttt_board[i][0] = player_char;
         }
+        System.out.println("Checking winner: " + winnerConvert(this.checkWinner()));
         JAIOManager.printBoard(this);
-        System.out.print("Checking winner: " + winnerConvert(this.checkWinner()) + "\n\n");
         this.clearBoard();
+
         for(int i = 0; i < COL; i++) {
             ttt_board[0][i] = player_char;
         }
+        System.out.println("Checking winner: " + winnerConvert(this.checkWinner()));
         JAIOManager.printBoard(this);
-        System.out.print("Checking winner: " + winnerConvert(this.checkWinner()) + "\n");
+        this.clearBoard();
+
+        for(int i = 0; i < ROW; i++) {
+            ttt_board[i][1] = player_char;
+        }
+        System.out.println("Checking winner: " + winnerConvert(this.checkWinner()));
+        JAIOManager.printBoard(this);
+        this.clearBoard();
+
+        for(int i = 0; i < COL; i++) {
+            ttt_board[1][i] = machine_char;
+        }
+        System.out.println("Checking winner: " + winnerConvert(this.checkWinner()));
+        JAIOManager.printBoard(this);
+        this.clearBoard();
+
+        for(int i = 0; i < ROW; i++) {
+            ttt_board[i][i] = machine_char;
+        }
+        System.out.println("Checking winner: " + winnerConvert(this.checkWinner()));
+        JAIOManager.printBoard(this);
+        this.clearBoard();
+
+        ttt_board[0][2] = machine_char;
+        ttt_board[1][1] = machine_char;
+        ttt_board[2][0] = machine_char;
+        System.out.println("Checking winner: " + winnerConvert(this.checkWinner()));
+        JAIOManager.printBoard(this);
         this.clearBoard();
     }
 }

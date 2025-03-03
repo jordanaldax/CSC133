@@ -11,4 +11,5 @@ public class JASPOT {
     public static char default_char = '-';
     public static char player_char = 'P';
     public static char machine_char = 'X';
+    public static char winner_check = '?';
 }
