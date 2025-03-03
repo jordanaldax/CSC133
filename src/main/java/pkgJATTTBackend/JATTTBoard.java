@@ -29,11 +29,10 @@ public class JATTTBoard {
     }
 
     public void playAgainMessage() {
-        System.out.println("Play again? ");
+        JAIOManager.playAgainMessage();
+        System.out.println("Beginning another round, type 'q' to quit\n");
     }
 
-    // Game needs to check if someone has won after every input
-    // updateBoard, checkWinner, isBoardFull
     private boolean updateBoard(int row, int col) {
         if(row < 0 || row >= ROW || col < 0 || col >= COL) {
             JAIOManager.invalidEntryMessage();
@@ -155,11 +154,38 @@ public class JATTTBoard {
         prompt machine
 
      */
+
+    // the game will loop in the driver, therefore play() should play one turn
+    // 1. it should check if the board is full
+    // 2. it should check for a winner
+    // 3. print the board and prompt the player
+    // 4. check the user's input
+    // 5. prompt the machine
     public int play() {
-        while(!isBoardFull()) {
-            //
+        JAMachinePlayer machine = new JAMachinePlayer(this);
+        int game_status = GAME_INCOMPLETE;
+        if(isBoardFull()) {
+            if(checkWinner() == -1)
+                game_status = GAME_DRAW;
+            else
+                game_status = checkWinner();
         }
-        return 0;
+        else if(checkWinner() > 0) {
+            game_status = checkWinner();
+        }
+
+        // prompting the user
+        JAIOManager.printBoard(this);
+        JAIOManager.rowColPrompt();
+        int[] input = JAIOManager.readIntegerInput(totalValidEntries);
+        if(input != null) {
+            this.updateBoard(input[0], input[1]);
+        }
+        else if(JAIOManager.readQuitInput()) {
+            game_status = GAME_QUIT;
+        }
+
+        return game_status;
     }
 
     /*

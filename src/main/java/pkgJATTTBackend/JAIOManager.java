@@ -30,7 +30,7 @@ public class JAIOManager {
     }
 
     public static void boardCompleteMessage() {
-        System.out.println("All entries on the board are filled!\nGame Over - come again!\n");
+        System.out.println("All entries on the board are filled!");
     }
 
     public static void playerWinMessage() {
@@ -73,7 +73,6 @@ public class JAIOManager {
         char tmpChar = tmpString.charAt(0);
         if (tmpChar == 'Q' || tmpChar == 'q') {
             quitGameMessage();
-            System.exit(0);
             return true;
         }
         else {
