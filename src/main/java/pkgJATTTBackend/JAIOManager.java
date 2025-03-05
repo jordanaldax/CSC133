@@ -1,6 +1,7 @@
 package pkgJATTTBackend;
 
 import java.util.Scanner;
+import static pkgJATTTBackend.JASPOT.*;
 
 public class JAIOManager {
     private static Scanner myScanner = new Scanner(System.in);
@@ -19,6 +20,17 @@ public class JAIOManager {
 
     public static void cellNotFreeMessage(int row, int col) {
         System.out.println("Cell [" + row + ", " + col + "] is not free. Please try again.");
+    }
+
+    public static void printWinMessage(int game_status) {
+        if(game_status == GAME_QUIT)
+            quitGameMessage();
+        else if(game_status == GAME_PLAYER)
+            playerWinMessage();
+        else if(game_status == GAME_MACHINE)
+            machineWinMessage();
+        else
+            gameDrawMessage();
     }
 
     public static void invalidEntryMessage() {

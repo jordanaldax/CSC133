@@ -38,7 +38,7 @@ public class JATTTBoard {
             JAIOManager.invalidEntryMessage();
             return false;
         }
-        else if(ttt_board[row][col] != default_char) {
+        else if(!emptySpace(row, col)) {
             JAIOManager.cellNotFreeMessage(row, col);
             return false;
         }
@@ -59,7 +59,7 @@ public class JATTTBoard {
     private int checkWinner() {
         char tmp;
         char winner_char = winner_check;
-        int winner = -1;
+        int winner;
 
         // check across row
         // if it gets to the last col in the row and the
@@ -127,6 +127,9 @@ public class JATTTBoard {
         else if(winner_char == machine_char) {
             winner = GAME_MACHINE;
         }
+        else {
+            winner = GAME_INCOMPLETE;
+        }
         return winner;
     }
 
@@ -139,6 +142,14 @@ public class JATTTBoard {
             }
         }
         return true;
+    }
+
+    private boolean emptySpace(int row, int col) {
+        if(ttt_board[row][col] == default_char) {
+            return true;
+        }
+        else
+            return false;
     }
 
     /*
@@ -161,9 +172,39 @@ public class JATTTBoard {
     // 3. print the board and prompt the player
     // 4. check the user's input
     // 5. prompt the machine
+
+    public int play() {
+        JAMachinePlayer machine = new JAMachinePlayer(this);
+
+
+        JAIOManager.printBoard(this);
+        JAIOManager.rowColPrompt();
+        int[] input = JAIOManager.readIntegerInput(totalValidEntries);
+        if(input == null && JAIOManager.readQuitInput()) {
+            return GAME_QUIT;
+        }
+        else if(input != null) {
+            updateBoard(input[0],input[1]);
+        }
+
+        machine.testPlay2();
+
+        int game_status = checkWinner();
+        if(isBoardFull() && game_status == GAME_INCOMPLETE) {
+            return GAME_DRAW;
+        }
+        else if(game_status != GAME_INCOMPLETE) {
+            return game_status;
+        }
+
+        return game_status;
+    }
+
+    /*
     public int play() {
         JAMachinePlayer machine = new JAMachinePlayer(this);
         int game_status = GAME_INCOMPLETE;
+        game_status = checkWinner();
         if(isBoardFull()) {
             if(checkWinner() == -1)
                 game_status = GAME_DRAW;
@@ -178,15 +219,26 @@ public class JATTTBoard {
         JAIOManager.printBoard(this);
         JAIOManager.rowColPrompt();
         int[] input = JAIOManager.readIntegerInput(totalValidEntries);
-        if(input != null) {
-            this.updateBoard(input[0], input[1]);
-        }
-        else if(JAIOManager.readQuitInput()) {
+        if(input == null && JAIOManager.readQuitInput()) {
             game_status = GAME_QUIT;
+        }
+        while(input != null && !emptySpace(input[0], input[1])) {
+            JAIOManager.invalidEntryMessage();
+            JAIOManager.rowColPrompt();
+            input = JAIOManager.readIntegerInput(totalValidEntries);
+        }
+        if(input != null) {
+            updateBoard(input[0], input[1]);
+        }
+        // prompting the machine
+        if(!isBoardFull()) {
+            machine.testPlay();
         }
 
         return game_status;
     }
+
+     */
 
     /*
     public int play() {

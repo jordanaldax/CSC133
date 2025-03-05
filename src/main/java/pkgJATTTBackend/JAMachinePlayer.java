@@ -1,10 +1,13 @@
 package pkgJATTTBackend;
 
 import static pkgJATTTBackend.JASPOT.*;
+import java.util.*;
 
 public class JAMachinePlayer {
     private JATTTBoard my_board;
     private char[][] ttt_board;
+    private static int test = 0;
+    Random random = new Random();
 
     protected JAMachinePlayer(JATTTBoard my_board) {
         this.my_board = my_board;
@@ -31,19 +34,79 @@ public class JAMachinePlayer {
            P - -      P - -      P - -      P - -       P - -
         In this scenario, each player uses their turn to not lose, ending in a draw.
     last, play a random spot (this should be called near the end of the game if the player plays optimally)
-    i don't even know how many of these methods from the UML are even useful
 
      */
     public int play() {
         int[] input = new int[2];
+
+        for(int col = 0; col < ROW; col++) {
+            int row = findRepeatsInCol(col);
+            if(row >= 0) {
+                input[0] = row;
+                input[1] = col;
+            }
+        }
+
+        for(int row = 0; row < ROW; row++) {
+            int col = findRepeatsInRow(row);
+            if(col >= 0) {
+                input[0] = row;
+                input[1] = col;
+            }
+        }
         return 0;
     }
 
+    public int testPlay() {
+        int[] input = new int[2];
+        input = randomPick();
+        while(!checkInput(input[0], input[1])) {
+            input = randomPick();
+        }
+        ttt_board[input[0]][input[1]] = machine_char;
+        return 0;
+    }
+
+    public int testPlay2() {
+        int[] input = new int[2];
+        if(test < 3) {
+            input[0] = test;
+            input[1] = test;
+        }
+        else {
+            input = randomPick();
+        }
+        while(!checkInput(input[0], input[1])) {
+            input = randomPick();
+        }
+        ttt_board[input[0]][input[1]] = machine_char;
+        test++;
+        return 0;
+    }
+
+    private int[] randomPick() {
+        int[] input = new int[2];
+        int row = random.nextInt(ROW);
+        int col = random.nextInt(COL);
+        input[0] = row;
+        input[1] = col;
+        return input;
+    }
+
+    private boolean checkInput(int row, int col) {
+        if(ttt_board[row][col] == default_char) {
+            return true;
+        }
+        else
+            return false;
+    }
+
+    // check if machine can win the game
     private boolean playToConclude(char myChar) {
         return true;
     }
 
-    // check if the machine can play the space, call
+    // check if the machine can play the space
     private boolean playTheCol(int col) {
         return true;
     }
@@ -62,6 +125,9 @@ public class JAMachinePlayer {
 
     // this should be the last option
     private boolean playRandomPick() {
+        int[] input = new int[2];
+        int row = random.nextInt(ROW);
+        int col = random.nextInt(COL);
         return true;
     }
 
@@ -136,12 +202,64 @@ public class JAMachinePlayer {
         return colToPlay;
     }
 
-    private int findRepeatsLDiagonal(int myInt) {
-        return 0;
+    // goes through the diagonal and converts it into a normal array
+    // checks the chars array for repeats
+    // if there's repeats of a char, searches for an empty space to return
+    // returns [-1, -1] if there's no repeats or no free space in the diagonal
+    private int[] findRepeatsLDiagonal() {
+        int[] cell = {-1,-1};
+        int[] chars = new int[ROW];
+        int player_repeats = 0;
+        int machine_repeats = 0;
+        for(int i = 0; i < ROW; i++) {
+            chars[i] = ttt_board[i][i];
+        }
+        for(int i = 0; i < chars.length; i++) {
+            if(chars[i] == player_char) {
+                player_repeats++;
+            }
+            else if(chars[i] == machine_char) {
+                machine_repeats++;
+            }
+        }
+        if(player_repeats == ROW-1 || machine_repeats == ROW-1) {
+            for(int i = 0; i < chars.length; i++) {
+                if(chars[i] == default_char) {
+                    cell[0] = i;
+                    cell[1] = i;
+                }
+            }
+        }
+        return cell;
     }
 
-    private int findRepeatsTDiagonal(int myInt) {
-        return 0;
+    private int[] findRepeatsTDiagonal() {
+        int[] cell = {-1,-1};
+        int[] chars = new int[ROW];
+        int player_repeats = 0;
+        int machine_repeats = 0;
+        int col = COL-1;
+        for(int row = 0; row < ROW; row++) {
+            chars[row] = ttt_board[row][col];
+            col--;
+        }
+        for(int i = 0; i < chars.length; i++) {
+            if(chars[i] == player_char) {
+                player_repeats++;
+            }
+            else if(chars[i] == machine_char) {
+                machine_repeats++;
+            }
+        }
+        if(player_repeats == ROW-1 || machine_repeats == ROW-1) {
+            for(int i = 0; i < chars.length; i++) {
+                if(chars[i] == default_char) {
+                    cell[0] = i;
+                    cell[1] = i;
+                }
+            }
+        }
+        return cell;
     }
 
     protected int isGameOver() {
