@@ -5,7 +5,6 @@ import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.*;
 import org.lwjgl.system.*;
-import pkgJAUtils.JAWindowManager;
 
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
@@ -26,9 +25,14 @@ public class JAWindowManager {
 
 
     private static JAWindowManager my_window = new JAWindowManager();
-    private long glfwWindow;
-    private int win_height;
-    private int win_width;
+    private static long glfwWindow;
+    private int WIN_WIDTH = 1800;
+    private int WIN_HEIGHT = 1200;
+
+    GLFWErrorCallback errorCallback;
+    GLFWKeyCallback keyCallback;
+    GLFWFramebufferSizeCallback fbCallback;
+    int WIN_POS_X = 30, WIN_POX_Y = 90;
 
     private JAWindowManager() {}
 
@@ -44,9 +48,21 @@ public class JAWindowManager {
         return my_window;
     }
 
-    public static JAWindowManager get(int width, int height, int pos_x, int pos_y) {
+    public static JAWindowManager get(int width, int height) {
         return my_window;
     }
+
+    public static JAWindowManager get(int width, int height, int orgX, int orgY) {
+        get(width, height);
+        setWindowPosition(orgX, orgY);
+        return my_window;
+    }  //  public SlWindowManager get(...)
+
+    public static void setWindowPosition(int orgX, int orgY) {
+        if (glfwWindow > 0) {
+            glfwSetWindowPos(glfwWindow, orgX, orgY);
+        }  //  if (glfwWindow > 0)
+    }  //  public void setWindowPosition(...)
 
     protected void setWinWidth(int width, int height) {}
 
@@ -56,7 +72,43 @@ public class JAWindowManager {
 
     public void swapBuffers() {}
 
-    private void initGlfwWindow() {}
+    private void initGLFWindow() {
+        glfwSetErrorCallback(errorCallback =
+                GLFWErrorCallback.createPrint(System.err));
+        if (!glfwInit())
+            throw new IllegalStateException("Unable to initialize GLFW");
+        glfwDefaultWindowHints();
+        glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
+        glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
+        glfwWindowHint(GLFW_SAMPLES, 8);
+        glfwWindow = glfwCreateWindow(WIN_WIDTH, WIN_HEIGHT, "CSC 133", NULL, NULL);
+        if (glfwWindow == NULL)
+            throw new RuntimeException("Failed to create the GLFW window");
+        glfwSetKeyCallback(glfwWindow, keyCallback = new GLFWKeyCallback() {
+            @Override
+            public void invoke(long window, int key, int scancode, int action, int
+                    mods) {
+                if (key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE)
+                    glfwSetWindowShouldClose(window, true);
+            }
+        });
+        glfwSetFramebufferSizeCallback(glfwWindow, fbCallback = new
+                GLFWFramebufferSizeCallback() {
+                    @Override
+                    public void invoke(long window, int w, int h) {
+                        if (w > 0 && h > 0) {
+                            WIN_WIDTH = w;
+                            WIN_HEIGHT = h;
+                        }
+                    }
+                });
+        GLFWVidMode vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+        glfwSetWindowPos(glfwWindow, WIN_POS_X, WIN_POX_Y);
+        glfwMakeContextCurrent(glfwWindow);
+        int VSYNC_INTERVAL = 1;
+        glfwSwapInterval(VSYNC_INTERVAL);
+        glfwShowWindow(glfwWindow);
+    }
 
     public int[] getWindowSize() {
         return new int[] {0};
