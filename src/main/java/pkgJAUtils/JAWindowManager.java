@@ -26,8 +26,8 @@ public class JAWindowManager {
 
     private static JAWindowManager my_window = new JAWindowManager();
     private static long glfwWindow;
-    private int WIN_WIDTH = 1800;
-    private int WIN_HEIGHT = 1200;
+    private int WIN_WIDTH = 1024;
+    private int WIN_HEIGHT = 1024;
 
     GLFWErrorCallback errorCallback;
     GLFWKeyCallback keyCallback;
@@ -36,12 +36,16 @@ public class JAWindowManager {
 
     private JAWindowManager() {}
 
-    public void updateContextToThis() {}
+    public void updateContextToThis() {
+        initGLFWindow();
+    }
 
-    public void destroyGlfwWindow() {}
+    public void destroyGlfwWindow() {
+        glfwTerminate();
+    }
 
     public boolean isGlfwWindowClosed() {
-        return true;
+        return my_window == null;
     }
 
     public static JAWindowManager get() {
@@ -49,6 +53,7 @@ public class JAWindowManager {
     }
 
     public static JAWindowManager get(int width, int height) {
+        setWinWidth(width, height);
         return my_window;
     }
 
@@ -64,13 +69,18 @@ public class JAWindowManager {
         }  //  if (glfwWindow > 0)
     }  //  public void setWindowPosition(...)
 
-    protected void setWinWidth(int width, int height) {}
+    protected static void setWinWidth(int width, int height) {
+        my_window.WIN_WIDTH = width;
+        my_window.WIN_HEIGHT = height;
+    }
 
     public void enableResizeWindowCallback() {
         glfwSetFramebufferSizeCallback(glfwWindow, resizeWindow);
     }  //  public void enableResizeWindowCallback(...)
 
-    public void swapBuffers() {}
+    public void swapBuffers() {
+        glfwSwapBuffers(glfwWindow);
+    }
 
     private void initGLFWindow() {
         glfwSetErrorCallback(errorCallback =
@@ -111,6 +121,9 @@ public class JAWindowManager {
     }
 
     public int[] getWindowSize() {
-        return new int[] {0};
+        int[] size = new int[2];
+        size[0] = WIN_WIDTH;
+        size[1] = WIN_HEIGHT;
+        return size;
     }
 }
