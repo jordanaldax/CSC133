@@ -28,11 +28,11 @@ public class JARenderer {
     private int shader_program;
     private int[] winWidthHeight;
     private int vpMatLocation;
-    private int renderColorLocation;
+    private int renderColorLocation = 0;
 
-    private FloatBuffer myFloatBuffer;
+    private FloatBuffer myFloatBuffer = BufferUtils.createFloatBuffer(OGL_MATRIX_SIZE);
     private JAWindowManager myWM;
-    private Matrix4f viewProjMatrix;
+    private Matrix4f viewProjMatrix = new Matrix4f();
 
     public JARenderer(JAWindowManager wm) {
         myWM = wm;
@@ -126,7 +126,6 @@ public class JARenderer {
         glLinkProgram(shader_program);
         glUseProgram(shader_program);
         vpMatLocation = glGetUniformLocation(shader_program, "viewProjMatrix");
-        return;
     }
 
     private void renderObjects() {
@@ -161,7 +160,15 @@ public class JARenderer {
     }
 
     public void render(final int offset, final int padding, final int size, final int numRows, final int numCols) {
-        //
+        this.OFFSET = offset;
+        this.PADDING = padding;
+        this.SIZE = size;
+        this.NUM_ROWS = numRows;
+        this.NUM_COLS = numCols;
+
+        myWM.updateContextToThis();
+        renderLoop();
+        myWM.destroyGlfwWindow();
     }
 
     private void renderLoop() {
