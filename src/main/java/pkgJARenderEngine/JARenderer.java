@@ -23,7 +23,6 @@ public class JARenderer {
     private final int FPV = 2; // Floats per Vertex
     private final int VPT = 4; // Vertices per Tile
     private final int IPT = 6; // Indices per Tile
-    static int WIN_WIDTH = 1800, WIN_HEIGHT = 1200, WIN_POS_X = 30, WIN_POX_Y = 90;
     private static final int OGL_MATRIX_SIZE = 16;
 
     private int shader_program;
@@ -44,14 +43,37 @@ public class JARenderer {
     }
 
     private int[] generateTileIndices(final int rows, final int cols) {
-        return null;
+        int[] indices = new int[NUM_ROWS * NUM_COLS * IPT];
+
+        for(int row = 0; row < rows; row++) {
+            for(int col = 0; col < cols; col++) {
+                int tileNum = row * cols + col;
+                int startIndex = tileNum * IPT;
+                int startIV = tileNum * VPT;
+
+                // First Triangle
+                indices[startIndex] = startIV;
+                indices[startIndex + 1] = startIV + 1;
+                indices[startIndex + 2] = startIV + 2;
+
+                // Second Triangle
+                indices[startIndex + 3] = startIV;
+                indices[startIndex + 4] = startIV + 2;
+                indices[startIndex + 5] = startIV + 3;
+            }
+        }
+        return indices;
     }
 
     private void initOpenGL() {
         GL.createCapabilities();
         glEnable(GL_DEPTH_TEST);
         glEnable(GL_CULL_FACE);
-        glViewport(0, 0, WIN_WIDTH, WIN_HEIGHT);
+
+        // Don't need to set WIN_WIDTH and WIN_HEIGHT, just use values from myWM
+        int[] windowSize = myWM.getWindowSize();
+        glViewport(0, 0, windowSize[0], windowSize[1]);
+
         glClearColor(0.0f, 0.0f, 1.0f, 1.0f);
         this.shader_program = glCreateProgram();
         int vs = glCreateShader(GL_VERTEX_SHADER);
