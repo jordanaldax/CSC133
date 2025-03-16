@@ -36,10 +36,43 @@ public class JARenderer {
 
     public JARenderer(JAWindowManager wm) {
         myWM = wm;
+        winWidthHeight = myWM.getWindowSize();
     }
 
     private float[] generateTilesVertices(final int rowTiles, final int colTiles) {
-        return null;
+        float[] vertices = new float[rowTiles * colTiles * VPT * FPV];
+
+        for(int row = 0; row < rowTiles; row++) {
+            for(int col = 0; col < colTiles; col++) {
+                int myIndx = (row * colTiles + col) * VPT * FPV;
+
+                float xmin = OFFSET + col * (SIZE + PADDING);
+                float ymin = winWidthHeight[1] - (OFFSET + SIZE + row * (SIZE + PADDING));
+
+                // Vertices are (xmin, ymin), (xmin+SIZE, ymin), (xmin+SIZE, ymin-SIZE), and (xmin, ymin-SIZE)
+                // Order is:
+                /*
+                    0: xmin
+                    1: ymin
+                    2: xmin+SIZE
+                    3: ymin
+                    4: xmin+SIZE
+                    5: ymin-SIZE
+                    6: xmin
+                    7: ymin-SIZE
+                 */
+                vertices[myIndx] = xmin;
+                vertices[myIndx + 1] = ymin;
+                vertices[myIndx + 2] = xmin + SIZE;
+                vertices[myIndx + 3] = ymin;
+                vertices[myIndx + 4] = xmin + SIZE;
+                vertices[myIndx + 5] = ymin - SIZE;
+                vertices[myIndx + 6] = xmin;
+                vertices[myIndx + 7] = ymin - SIZE;
+            }
+        }
+
+        return vertices;
     }
 
     private int[] generateTileIndices(final int rows, final int cols) {
@@ -70,9 +103,7 @@ public class JARenderer {
         glEnable(GL_DEPTH_TEST);
         glEnable(GL_CULL_FACE);
 
-        // Don't need to set WIN_WIDTH and WIN_HEIGHT, just use values from myWM
-        int[] windowSize = myWM.getWindowSize();
-        glViewport(0, 0, windowSize[0], windowSize[1]);
+        glViewport(0, 0, winWidthHeight[0], winWidthHeight[1]);
 
         glClearColor(0.0f, 0.0f, 1.0f, 1.0f);
         this.shader_program = glCreateProgram();
@@ -105,8 +136,8 @@ public class JARenderer {
             int vbo = glGenBuffers();
             int ibo = glGenBuffers();
 
-            float[] vertices = {-20f, -20f, 20f, -20f, 20f, 20f, -20f, 20f};
-            int[] indices = {0, 1, 2, 0, 2, 3};
+            float[] vertices = generateTilesVertices(NUM_ROWS, NUM_COLS);
+            int[] indices = generateTileIndices(NUM_ROWS, NUM_COLS);
 
             glBindBuffer(GL_ARRAY_BUFFER, vbo);
             glBufferData(GL_ARRAY_BUFFER, (FloatBuffer) BufferUtils.
