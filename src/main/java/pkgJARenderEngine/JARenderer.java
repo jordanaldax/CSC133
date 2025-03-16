@@ -7,6 +7,7 @@ import pkgJAUtils.JAWindowManager;
 
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
+import java.util.Arrays;
 
 import static org.lwjgl.glfw.GLFW.glfwPollEvents;
 import static org.lwjgl.glfw.GLFW.glfwWaitEvents;
@@ -33,6 +34,8 @@ public class JARenderer {
     private FloatBuffer myFloatBuffer = BufferUtils.createFloatBuffer(OGL_MATRIX_SIZE);
     private JAWindowManager myWM;
     private Matrix4f viewProjMatrix = new Matrix4f();
+
+    int test = 0;
 
     public JARenderer(JAWindowManager wm) {
         myWM = wm;
@@ -61,14 +64,22 @@ public class JARenderer {
                     6: xmin
                     7: ymin-SIZE
                  */
+
+                // Bottom left
                 vertices[myIndx] = xmin;
                 vertices[myIndx + 1] = ymin;
+
+                // Bottom right
                 vertices[myIndx + 2] = xmin + SIZE;
                 vertices[myIndx + 3] = ymin;
+
+                // Top Right
                 vertices[myIndx + 4] = xmin + SIZE;
-                vertices[myIndx + 5] = ymin - SIZE;
+                vertices[myIndx + 5] = ymin + SIZE;
+
+                // Top Left
                 vertices[myIndx + 6] = xmin;
-                vertices[myIndx + 7] = ymin - SIZE;
+                vertices[myIndx + 7] = ymin + SIZE;
             }
         }
 
@@ -148,12 +159,13 @@ public class JARenderer {
                     createIntBuffer(indices.length).
                     put(indices).flip(), GL_STATIC_DRAW);
             glVertexPointer(2, GL_FLOAT, 0, 0L);
-            viewProjMatrix.setOrtho(-100, 100, -100, 100, 0, 10);
+            viewProjMatrix.setOrtho(0, winWidthHeight[0], 0, winWidthHeight[1], 0, 10);
             glUniformMatrix4fv(vpMatLocation, false,
                     viewProjMatrix.get(myFloatBuffer));
             glUniform3f(renderColorLocation, 1.0f, 0.498f, 0.153f);
             glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-            final int VTD = 6; // need to process 6 Vertices To Draw 2 triangles
+            //final int VTD = 6; // need to process 6 Vertices To Draw 2 triangles
+            final int VTD = indices.length;
             glDrawElements(GL_TRIANGLES, VTD, GL_UNSIGNED_INT, 0L);
             myWM.swapBuffers();
         }
@@ -178,6 +190,13 @@ public class JARenderer {
         /* Process window messages in the main thread */
         while (!myWM.isGlfwWindowClosed()) {
             glfwWaitEvents();
+        }
+    }
+
+    private void test(int[] indices, float[] verticies) {
+        if(test == 0) {
+            System.out.println("Indices: " + Arrays.toString(indices));
+            System.out.println("Vertices: " + Arrays.toString(verticies));
         }
     }
 }
