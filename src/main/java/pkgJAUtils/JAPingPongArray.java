@@ -18,7 +18,8 @@ public class JAPingPongArray {
         randMin = min;
         randMax = max;
         array = new int[ROWS][COLS];
-        nextArray = new int[ROWS][COLS];
+        randomizeInRange();
+        nextArray = array.clone();
     }
 
     public void set(int row, int col, int value) {
@@ -47,19 +48,26 @@ public class JAPingPongArray {
         System.out.println();
     }
 
-    public void setCell(int row, int col, int col2) {
-        //
+    public void setCell(int row, int col, int value) {
+        if(col == 0)
+            array[row][col] = row;
+        else
+            array[row][col] = value;
     }
 
-    public void randomizeViaFisherYatesKnuth() {
+    private void randomizeInRange() {
         Random rand = new Random();
 
         // fill array with random numbers within randMin and randMax
         for(int i = 0; i < ROWS; i++) {
             for(int j = 0; j < COLS; j++) {
-                array[i][j] = rand.nextInt(randMax - randMin) + randMin;
+                array[i][j] = rand.nextInt(randMax - randMin + 1) + randMin;
             }
         }
+    }
+
+    public void randomizeViaFisherYatesKnuth() {
+        Random rand = new Random();
 
         // flatten 2D array into 1D list for shuffling
         int totalElements = ROWS * COLS;
@@ -101,7 +109,7 @@ public class JAPingPongArray {
                 curRow = readRow[0];
 
                 for(int curCol = 1; curCol < readRow.length; curCol++) {
-                    nextCellArray[curRow][curCol-1] = readRow[curCol];
+                    //nextCellArray[curRow][curCol-1] = readRow[curCol];
                 }
             }
         } catch (IOException e) {
