@@ -9,39 +9,69 @@ public class JAPingPongArray {
     int COLS;
     int randMin;
     int randMax;
-    private int[][] array;
+    private int[][] liveArray;
     private int[][] nextArray;
 
     public JAPingPongArray(int rows, int cols, int min, int max) {
         ROWS = rows;
-        COLS = cols;
+        COLS = cols + 1;
         randMin = min;
         randMax = max;
-        array = new int[ROWS][COLS];
+        nextArray = new int[ROWS][COLS];
+        initializeArray();
         randomizeInRange();
-        nextArray = array.clone();
+        liveArray = nextArray.clone();
     }
 
-    public void set(int row, int col, int value) {
-        //
+    private void initializeArray() {
+        for(int i = 0; i < ROWS; i++) {
+            for(int j = 0; j < COLS; j++) {
+                if(j == 0)
+                    nextArray[i][j] = i;
+                else
+                    nextArray[i][j] = -1;
+            }
+        }
     }
 
+    // swaps the values in the live and next arrays
     public void swapLiveAndNext() {
-        //
+        int[][] tempArray = liveArray;
+        liveArray = nextArray;
+        nextArray = tempArray;
     }
 
     public int[][] getArray() {
-        return array.clone();
+        return liveArray.clone();
     }
 
     public void copyToNextArray() {
-        //
+        nextArray = liveArray.clone();
     }
 
     public void printArray() {
         for (int i = 0; i < ROWS; i++) {
             for (int j = 0; j < COLS; j++) {
-                System.out.print(array[i][j] + " ");
+                System.out.print(liveArray[i][j] + " ");
+            }
+            System.out.println();
+        }
+        System.out.println();
+    }
+
+    public void testPrintArray() {
+        System.out.println("\nLive Array:");
+        for (int i = 0; i < ROWS; i++) {
+            for (int j = 0; j < COLS; j++) {
+                System.out.print(liveArray[i][j] + " ");
+            }
+            System.out.println();
+        }
+
+        System.out.println("\nNext Array:");
+        for (int i = 0; i < ROWS; i++) {
+            for (int j = 0; j < COLS; j++) {
+                System.out.print(nextArray[i][j] + " ");
             }
             System.out.println();
         }
@@ -49,10 +79,8 @@ public class JAPingPongArray {
     }
 
     public void setCell(int row, int col, int value) {
-        if(col == 0)
-            array[row][col] = row;
-        else
-            array[row][col] = value;
+        col++;
+        nextArray[row][col] = value;
     }
 
     private void randomizeInRange() {
@@ -60,8 +88,8 @@ public class JAPingPongArray {
 
         // fill array with random numbers within randMin and randMax
         for(int i = 0; i < ROWS; i++) {
-            for(int j = 0; j < COLS; j++) {
-                array[i][j] = rand.nextInt(randMax - randMin + 1) + randMin;
+            for(int j = 1; j < COLS; j++) {
+                nextArray[i][j] = rand.nextInt(randMax - randMin + 1) + randMin;
             }
         }
     }
@@ -76,7 +104,7 @@ public class JAPingPongArray {
 
         for(int i = 0; i < ROWS; i++) {
             for(int j = 1; j < COLS; j++) {
-                flatArray[index++] = array[i][j];
+                flatArray[index++] = liveArray[i][j];
             }
         }
 
@@ -94,23 +122,45 @@ public class JAPingPongArray {
         index = 0;
         for(int i = 0; i < ROWS; i++) {
             for(int j = 1; j < COLS; j++) {
-                array[i][j] = flatArray[index++];
+                nextArray[i][j] = flatArray[index++];
             }
         }
     }
 
     public void loadFile(String filename) {
         try(BufferedReader myReader = new BufferedReader(new FileReader(filename))) {
-            List<int[]> dataList = new ArrayList<>();
             String line;
 
-            int curRow;
-            while((line = myReader.readLine()) != null) {
-                int[] readRow =Arrays.stream(line.split("\\s+")).mapToInt(Integer::parseInt).toArray();
-                curRow = readRow[0];
+            // get default value
+            int defaultValue = Integer.parseInt(myReader.readLine().trim());
 
+            // read max rows and columns
+            String[] rowsAndCols = myReader.readLine().trim().split("\\s+");
+            int rows = Integer.parseInt(rowsAndCols[0]);
+            int cols = Integer.parseInt(rowsAndCols[1]+1);
+
+            // fill nextArray with default value
+            for(int i = 0; i < ROWS; i++) {
+                for(int j = 0; j < COLS; j++) {
+                    nextArray[i][j] = defaultValue;
+                }
+            }
+
+            // read data
+            while((line = myReader.readLine()) != null) {
+
+                // process each line
+                int[] readRow = Arrays.stream(line.split("\\s+")).mapToInt(Integer::parseInt).toArray();
+
+                // first value is row number
+                int curRow = readRow[0];
+
+                // set first value to row number
+                nextArray[curRow][0] = curRow;
+
+                // fill in data starting from column 1
                 for(int curCol = 1; curCol < readRow.length; curCol++) {
-                    //nextCellArray[curRow][curCol-1] = readRow[curCol];
+                    nextArray[curRow][curCol] = readRow[curCol];
                 }
             }
         } catch (IOException e) {
@@ -118,6 +168,7 @@ public class JAPingPongArray {
         }
     }
 
+    // neighbors of a number are all adjacent values
     public void updateToNearestNNSum() {
         //
     }
