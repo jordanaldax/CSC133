@@ -70,11 +70,12 @@ public class JAPingPongArray {
         Random rand = new Random();
 
         // flatten 2D array into 1D list for shuffling
-        int totalElements = ROWS * COLS;
+        int totalElements = ROWS * (COLS-1);
         int[] flatArray = new int[totalElements];
         int index = 0;
+
         for(int i = 0; i < ROWS; i++) {
-            for(int j = 0; j < COLS; j++) {
+            for(int j = 1; j < COLS; j++) {
                 flatArray[index++] = array[i][j];
             }
         }
@@ -92,7 +93,7 @@ public class JAPingPongArray {
         // convert shuffled array back into 2D array
         index = 0;
         for(int i = 0; i < ROWS; i++) {
-            for(int j = 0; j < COLS; j++) {
+            for(int j = 1; j < COLS; j++) {
                 array[i][j] = flatArray[index++];
             }
         }

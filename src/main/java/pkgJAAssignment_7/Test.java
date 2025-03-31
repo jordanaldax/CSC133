@@ -18,5 +18,9 @@ public class Test {
         }  //  for(int row = 0; row < ROWS; ++row)
         System.out.println("\n[0, COLS) Board:");
         myBoard.printArray();
+
+        myBoard.randomizeViaFisherYatesKnuth();
+        System.out.println("\n[0, COLS) Board Randomized via FYK algorithm:");
+        myBoard.printArray();
     }
 }
