@@ -19,18 +19,19 @@ public class JAPingPongArray {
         randMin = min;
         randMax = max;
         nextArray = new int[ROWS][COLS];
-        initializeArray();
+        liveArray = new int[ROWS][COLS];
+        initializeArray(nextArray);
+        initializeArray(liveArray);
         randomizeInRange();
-        liveArray = nextArray.clone();
     }
 
-    private void initializeArray() {
+    private void initializeArray(int[][] array) {
         for(int i = 0; i < ROWS; i++) {
             for(int j = 0; j < COLS; j++) {
                 if(j == 0)
-                    nextArray[i][j] = i;
+                    array[i][j] = i;
                 else
-                    nextArray[i][j] = defaultValue;
+                    array[i][j] = defaultValue;
             }
         }
     }
@@ -170,8 +171,72 @@ public class JAPingPongArray {
     }
 
     // neighbors of a number are all adjacent values
+    // should just be value to the top, bottom, left, and right of the current value
+    // also needs to include the diagonal values
+    // should not include the row number
+    // updates the nextArray with the neighbor elements in liveArray
     public void updateToNearestNNSum() {
-        //
+        // up:           i-1, j
+        // down:         i+1, j
+        // left:         i, j-1
+        // right:        i, j+1
+        // top left:     i-1, j-1
+        // top right:    i-1, j+1
+        // bottom left:  i+1, j-1
+        // bottom right: i+1, j+1
+
+        for(int i = 0; i < ROWS; i++) {
+            // ignore first column, since it is row numbers
+            for(int j = 1; j < COLS; j++) {
+                int sum = 0;
+
+                // up: i-1, j
+                // if i == 0, there is no up to add
+                if(i > 0)
+                    sum += liveArray[i-1][j];
+
+                // top left: i-1, j-1
+                // if i == 0 there is no up to add
+                // if j == 1 there is no left to add
+                if(i > 0 && j > 1)
+                    sum += liveArray[i-1][j-1];
+
+                // top right: i-1, j+1
+                // if i == 0 there is no up to add
+                // if j == COLS there is no right to add
+                if(i > 0 && j < COLS-1)
+                    sum += liveArray[i-1][j+1];
+
+                // down: i+1, j
+                // if i == ROWS, there is no down to add
+                if(i < ROWS-1)
+                    sum += liveArray[i+1][j];
+
+                // down left: i+1, j-1
+                // if i == ROWS there is no down to add
+                // if j == 1 there is no left to add
+                if(i < ROWS-1 && j > 1)
+                    sum += liveArray[i+1][j-1];
+
+                // down right: i+1, j+1
+                // if i == ROWS there is no down to add
+                // if j == COLS there is no right to add
+                if(i < ROWS-1 && j < COLS-1)
+                    sum += liveArray[i+1][j+1];
+
+                // left: i, j-1
+                // if j == 1, left is the row column, and we don't want to add that
+                if(j > 1)
+                    sum += liveArray[i][j-1];
+
+                // right: i, j+1
+                // if j == COLS, there is no right to add
+                if(j < COLS-1)
+                    sum += liveArray[i][j+1];
+
+                nextArray[i][j] = sum;
+            }
+        }
     }
 
     public void save() {

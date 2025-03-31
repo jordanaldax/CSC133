@@ -25,30 +25,19 @@ public class Test {
         System.out.println("INITIALIZATION TEST:");
         myBoard.testPrintArray();
 
-        myBoard.swapLiveAndNext();
-        System.out.println("[10, 20) Board:");
-        myBoard.testPrintArray();
-
-        for (int row = 0; row < ROWS; ++row) {
-            for (int col = 0; col < COLS; ++col) {
-                myBoard.setCell(row, col, col);
-            }  //  for(int col = 0; col < COLS; ++col)
-        }  //  for(int row = 0; row < ROWS; ++row)
-        myBoard.swapLiveAndNext();
-        System.out.println("\n[0, COLS) Board:");
-        myBoard.testPrintArray();
-
-        myBoard.randomizeViaFisherYatesKnuth();
-        myBoard.swapLiveAndNext();
-        System.out.println("\n[0, COLS) Board Randomized via FYK algorithm:");
-        myBoard.testPrintArray();
-
         myBoard.loadFile("neighbors_test.txt");
         System.out.println("\n[0, 1] data file array:");
         myBoard.swapLiveAndNext();
         myBoard.testPrintArray();
 
+        System.out.println("\nBefore calling NNSum:");
+        myBoard.testPrintArray();
+
         myBoard.updateToNearestNNSum();
+
+        System.out.println("\nAfter calling NNSum:");
+        myBoard.testPrintArray();
+
         myBoard.swapLiveAndNext();
         System.out.println("\nNearest Neighbor sum array:");
         myBoard.testPrintArray();
