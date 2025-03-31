@@ -9,6 +9,7 @@ public class JAPingPongArray {
     int COLS;
     int randMin;
     int randMax;
+    int defaultValue = 99;
     private int[][] liveArray;
     private int[][] nextArray;
 
@@ -29,7 +30,7 @@ public class JAPingPongArray {
                 if(j == 0)
                     nextArray[i][j] = i;
                 else
-                    nextArray[i][j] = -1;
+                    nextArray[i][j] = defaultValue;
             }
         }
     }
@@ -174,11 +175,38 @@ public class JAPingPongArray {
     }
 
     public void save() {
-        //
+        save("ppa_data.txt");
     }
 
     public void save(String filename) {
-        //
+        try(BufferedWriter writer = new BufferedWriter(new FileWriter(filename))) {
+            // being file with default value
+            writer.write(String.valueOf(defaultValue));
+            writer.newLine();
+
+            // write rows and columns
+            // makes sure to write one less column than there actually is
+            // since the column for row numbers does not count
+            writer.write(ROWS + " " + (COLS-1));
+            writer.newLine();
+
+            // write the data
+            for(int i = 0; i < ROWS; i++) {
+
+                // write the row number
+                writer.write(String.valueOf(i));
+
+                // write the rest of the values in the row
+                // makes sure to start at j=1 so that it doesn't
+                // rewrite the row number
+                for(int j = 1; j < COLS; j++) {
+                    writer.write(" " + liveArray[i][j]);
+                }
+                writer.newLine();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 }
