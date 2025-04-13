@@ -67,8 +67,45 @@ class Assignment8_Test {
 
         boolean retVal = false;
 
-        //
+        // creating a new JAPingPongArray object to test the default value portion of the constructor
+        JAPingPongArray myBoard2 = new JAPingPongArray(7, 7, 0, 5);
 
+        // the constructor initializes both the liveArray and nextArray with the default value
+        // before the first swap, the liveArray should be full of the default value
+        // returns if any value besides the row number is not the default value
+        int[][] temp = myBoard2.getLiveArray();
+        int defValue = myBoard2.getDefaultValue();
+        for(int i = 0; i < rows; i++) {
+            for(int j = 1; j < cols+1; j++) {
+                if(temp[i][j] != defValue) {
+                    return retVal;
+                }
+            }
+        }
+
+        myBoard2.swapLiveAndNext();
+
+        // validates that filling the array with defaultValue in loadFile is working
+        /*
+            ult_a_input.txt comes with empty spaces in the file. if loadFile is working correctly,
+            then it will fill those empty spaces with 0 as the default value, which the file provides
+        */
+        myBoard2.loadFile("ult_a_input.txt");
+        myBoard2.swapLiveAndNext();
+        int cols = myBoard2.getCols();
+        temp = myBoard2.getLiveArray();
+        defValue = myBoard2.getDefaultValue();
+        if(temp[2][7] != defValue)
+            return retVal;
+        if(temp[4][6] != defValue && temp[4][7] != defValue)
+            return retVal;
+        for(int i = 4; i < cols; i++) {
+            if(temp[3][i] != defValue) {
+                return retVal;
+            }
+        }
+
+        retVal = true;
         return retVal;
     }
 
@@ -96,8 +133,32 @@ class Assignment8_Test {
 
         boolean retVal = false;
 
-        //
+        myBoard.randomize();
 
+        // create an array of 5 strings
+        String[] stringArray = new String[5];
+
+        // store the live array in to the stringArray and then randomize the
+        for(int i = 0; i < stringArray.length; i++) {
+            stringArray[i] = myBoard.getLiveString();
+            myBoard.randomize();
+        }
+
+        // checks the value of the current index with the string in the next index
+        /*
+            since randomize happens at every step in the previous for loop, the randomize
+            function should only have failed to properly randomize if two adjacent indices
+            are the same. the for loop will not return early so long as the two adjacent
+            arrays are not identical.
+        */
+        for(int j = 0; j < stringArray.length-1; j++) {
+            if(stringArray[j].equals(stringArray[j+1])) {
+                return retVal;
+            }
+        }
+
+        // if the code got to the end of the method, then ult_d passed
+        retVal = true;
         return retVal;
     }
 }

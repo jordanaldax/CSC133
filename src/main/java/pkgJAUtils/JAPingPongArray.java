@@ -51,6 +51,18 @@ public class JAPingPongArray {
         nextArray = tempArray;
     }
 
+    public int getDefaultValue() {
+        return defaultValue;
+    }
+
+    public int getRows() {
+        return ROWS;
+    }
+
+    public int getCols() {
+        return COLS;
+    }
+
     public int[][] getLiveArray() {
         return liveArray.clone();
     }
