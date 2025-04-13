@@ -28,6 +28,12 @@ class Assignment8_Test {
             return "FAIL";
     }
 
+    /*
+        ult_a tests the loadFile() function by loading two files, ult_a_input and ult_a_verify
+        and comparing them to each other. in order to properly compare them, the values in
+        ult_a_input need to be swapped (all 0s become 1s and vice versa). the ult passes if the
+        liveArray and nextArray have the same values.
+     */
     private static boolean ult_a() {
 
         boolean retVal = false;
@@ -63,6 +69,14 @@ class Assignment8_Test {
         return retVal;
     }
 
+    /*
+        ult_b tests if the default value is being used. first it tests that the default value gets used
+        during initialization of the object by checking the liveArray immediately after initialization,
+        since it should be full of whatever default value is defined. then, it tests the default value
+        being used in loadFile() by loading ult_a_input.txt, which has some cells with missing values.
+        it checks the specific cells that were missing values and should have the default value specified
+        by the file there now after being loaded. the ult passes if both of these checks pass.
+     */
     private static boolean ult_b() {
 
         boolean retVal = false;
@@ -109,6 +123,13 @@ class Assignment8_Test {
         return retVal;
     }
 
+    /*
+        ult_c tests the swapLiveAndNext() method by first randomizing the values in the live and next
+        arrays. then it creates a string with the live array and swaps the live and next arrays. this
+        should ensure that the next array after the swap is the live array that was just saved as a
+        string. then another string is created that takes nextArray. the two strings are then compared.
+        the ult passes if both the strings are the same.
+     */
     private static boolean ult_c() {
 
         boolean retVal = false;
@@ -129,6 +150,14 @@ class Assignment8_Test {
         return retVal;
     }
 
+    /*
+        ult_d tests that the randomization is working properly. to do this, we create an array of
+        strings that will be tested later. each index of the string array is set to the current
+        liveArray string, and then the board is randomized again. then the strings are compared
+        with each other. only the current index is compared to the next index due to when the
+        randomization happens. the ult passes if none of the strings were identical to the string
+        in the next index.
+     */
     private static boolean ult_d() {
 
         boolean retVal = false;
