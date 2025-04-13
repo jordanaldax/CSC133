@@ -8,6 +8,8 @@ public class Test {
         JAPingPongArrayLive myBoard = new JAPingPongArrayLive(rows, cols, liveCount);
         myBoard.swapLiveAndNext();
         myBoard.testPrintArray();
+
+        myBoard.countNNTest();
     }
 
     public static void liveCount(int[][] liveArray) {
