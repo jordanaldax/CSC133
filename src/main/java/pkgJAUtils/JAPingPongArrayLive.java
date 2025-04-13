@@ -44,6 +44,17 @@ public class JAPingPongArrayLive extends JAPingPongArray {
         nextArray[row][col] = DEAD;
     }
 
+    public void swapOnesAndZeros() {
+        for(int i = 0; i < ROWS; i++) {
+            for(int j = 1; j < COLS; j++) {
+                if(nextArray[i][j] == DEAD)
+                    nextArray[i][j] = LIVE;
+                else
+                    nextArray[i][j] = DEAD;
+            }
+        }
+    }
+
     // read from LIVE ARRAY
     public int countLiveDegreeTwoNeighbors(int row, int col) {
         int count = 0;
@@ -64,6 +75,22 @@ public class JAPingPongArrayLive extends JAPingPongArray {
             count++;
 
         return count;
+    }
+
+    private void resetNextArray() {
+        for(int i = 0; i < ROWS; i++) {
+            for(int j = 1; j < COLS; j++) {
+                nextArray[i][j] = DEAD;
+            }
+        }
+    }
+
+    public void randomize() {
+        resetNextArray();
+        addRandomLive();
+        swapLiveAndNext();
+        resetNextArray();
+        addRandomLive();
     }
 
 

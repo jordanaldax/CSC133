@@ -55,8 +55,30 @@ public class JAPingPongArray {
         return liveArray.clone();
     }
 
+    public String getLiveString() {
+        String s = "";
+        for(int i = 0; i < ROWS; i++) {
+            for(int j = 0; j < COLS; j++) {
+                s += liveArray[i][j] + " ";
+            }
+            s += "\n";
+        }
+        return s;
+    }
+
     public int[][] getNextArray() {
         return nextArray.clone();
+    }
+
+    public String getNextString() {
+        String s = "";
+        for(int i = 0; i < ROWS; i++) {
+            for(int j = 0; j < COLS; j++) {
+                s += nextArray[i][j] + " ";
+            }
+            s += "\n";
+        }
+        return s;
     }
 
     public void copyToNextArray() {
@@ -146,7 +168,8 @@ public class JAPingPongArray {
             String line;
 
             // get default value
-            int defaultValue = Integer.parseInt(myReader.readLine().trim());
+            int defValue = Integer.parseInt(myReader.readLine().trim());
+            defaultValue = defValue;
 
             // read max rows and columns
             String[] rowsAndCols = myReader.readLine().trim().split("\\s+");
