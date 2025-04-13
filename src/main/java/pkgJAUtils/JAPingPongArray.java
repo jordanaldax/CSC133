@@ -10,8 +10,16 @@ public class JAPingPongArray {
     int randMin;
     int randMax;
     int defaultValue = 99;
-    private int[][] liveArray;
-    private int[][] nextArray;
+
+    // Read from liveArray
+    // Write to nextArray
+
+    protected int[][] liveArray;
+    protected int[][] nextArray;
+
+    public JAPingPongArray() {
+        //
+    }
 
     public JAPingPongArray(int rows, int cols, int min, int max) {
         ROWS = rows;
@@ -25,7 +33,7 @@ public class JAPingPongArray {
         randomizeInRange();
     }
 
-    private void initializeArray(int[][] array) {
+    protected void initializeArray(int[][] array) {
         for(int i = 0; i < ROWS; i++) {
             for(int j = 0; j < COLS; j++) {
                 if(j == 0)
@@ -43,8 +51,12 @@ public class JAPingPongArray {
         nextArray = tempArray;
     }
 
-    public int[][] getArray() {
+    public int[][] getLiveArray() {
         return liveArray.clone();
+    }
+
+    public int[][] getNextArray() {
+        return nextArray.clone();
     }
 
     public void copyToNextArray() {
