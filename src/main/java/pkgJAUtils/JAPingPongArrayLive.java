@@ -56,22 +56,76 @@ public class JAPingPongArrayLive extends JAPingPongArray {
     }
 
     // read from LIVE ARRAY
+    /*
+        0th degree neighbors: 2^2   = 4
+        1st degree neighbors: 2^3   = 8
+        2nd degree neighbors: 2^4   = 16?
+        0 [ ] [ ] [ ] [ ] [ ] [ ] [ ]
+        1 [ ] [ ] [ ] [2] [ ] [ ] [ ]
+        2 [ ] [ ] [1] [O] [1] [ ] [ ]
+        3 [ ] [2] [O] [X] [O] [2] [ ]
+        4 [ ] [ ] [1] [O] [1] [ ] [ ]
+        5 [ ] [ ] [ ] [2] [ ] [ ] [ ]
+        6 [ ] [ ] [ ] [ ] [ ] [ ] [ ]
+        with the cell we're checking being marked as X
+        0th degree: 0
+        1st degree: 1
+        2nd degree: 2
+
+        I don't really know how we're supposed to do the 2nd degree neighbors,
+        since 2nd degree adds 8 more but there are 9 immediate squares around
+        the initial 8. So the way I have it in the diagram is how I'm going to
+        be doing it.
+     */
     public int countLiveDegreeTwoNeighbors(int row, int col) {
         int count = 0;
+
         // top = row-1, col
-        if(row > 0 && nextArray[row-1][col] == LIVE)
+        if(row > 0 && liveArray[row-1][col] == LIVE)
+            count++;
+
+        // top-left = row-1, col-1
+        if(row > 0 && col > 0 && liveArray[row-1][col-1] == LIVE)
+            count++;
+
+        // top-right = row-1, col+1
+        if(row > 0 && col < COLS-1 && liveArray[row-1][col+1] == LIVE)
+            count++;
+
+        // far top = row-2, col
+        if(row > 1 && liveArray[row-2][col] == LIVE)
             count++;
 
         // bottom = row+1, col
-        if(row < ROWS-1 && nextArray[row+1][col] == LIVE)
+        if(row < ROWS-1 && liveArray[row+1][col] == LIVE)
+            count++;
+
+        // bottom-left = row+1, col-1
+        if(row < ROWS-1 && col > 0 && liveArray[row+1][col-1] == LIVE)
+            count++;
+
+        // bottom-right = row+1, col+1
+        if(row < ROWS-1 && col < COLS-1 && liveArray[row+1][col+1] == LIVE)
+            count++;
+
+        // far bottom = row+2, col
+        if(row < ROWS-2 && liveArray[row+2][col] == LIVE)
             count++;
 
         // left = row, col-1
-        if(col > 0 && nextArray[row][col-1] == LIVE)
+        if(col > 0 && liveArray[row][col-1] == LIVE)
+            count++;
+
+        // far left = row, col-2
+        if(col > 1 && liveArray[row][col-2] == LIVE)
             count++;
 
         // right = row, col+1
-        if(col < COLS-1 && nextArray[row][col+1] == LIVE)
+        if(col < COLS-1 && liveArray[row][col+1] == LIVE)
+            count++;
+
+        // far right = row, col+2
+        if(col < COLS-2 && liveArray[row][col+2] == LIVE)
             count++;
 
         return count;
