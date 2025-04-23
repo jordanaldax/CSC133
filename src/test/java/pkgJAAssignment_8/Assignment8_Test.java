@@ -89,8 +89,8 @@ class Assignment8_Test {
         // returns if any value besides the row number is not the default value
         int[][] temp = myBoard2.getLiveArray();
         int defValue = myBoard2.getDefaultValue();
-        for(int i = 0; i < rows; i++) {
-            for(int j = 1; j < cols+1; j++) {
+        for(int i = 0; i < myBoard2.getRows(); i++) {
+            for(int j = 1; j < myBoard2.getCols(); j++) {
                 if(temp[i][j] != defValue) {
                     return retVal;
                 }

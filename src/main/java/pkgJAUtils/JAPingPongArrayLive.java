@@ -9,6 +9,10 @@ public class JAPingPongArrayLive extends JAPingPongArray {
     final int DEAD = 0;
     final int LIVE = 1;
 
+    public JAPingPongArrayLive() {
+        super();
+    }
+
     public JAPingPongArrayLive(int numRows, int numCols, int numLiveCells) {
         super();
         defaultValue = 0;
@@ -73,7 +77,7 @@ public class JAPingPongArrayLive extends JAPingPongArray {
         2nd degree: 2
 
         I don't really know how we're supposed to do the 2nd degree neighbors,
-        since 2nd degree adds 8 more but there are 9 immediate squares around
+        since 2nd degree adds 8 more but there are 12 immediate squares around
         the initial 8. So the way I have it in the diagram is how I'm going to
         be doing it.
      */

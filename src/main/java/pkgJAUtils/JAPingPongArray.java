@@ -33,6 +33,7 @@ public class JAPingPongArray {
         randomizeInRange();
     }
 
+    // initializes array with default value
     protected void initializeArray(int[][] array) {
         for(int i = 0; i < ROWS; i++) {
             for(int j = 0; j < COLS; j++) {
@@ -60,11 +61,20 @@ public class JAPingPongArray {
     }
 
     public int getCols() {
-        return COLS;
+        /*
+            our first column is the row numbers, which is why we
+            set COLS to cols+1, and so we need to return COLS-1
+            when getting the number of columns in the array
+         */
+        return COLS-1;
     }
 
     public int[][] getLiveArray() {
         return liveArray.clone();
+    }
+
+    public int[][] getNextArray() {
+        return nextArray.clone();
     }
 
     public String getLiveString() {
@@ -76,10 +86,6 @@ public class JAPingPongArray {
             s += "\n";
         }
         return s;
-    }
-
-    public int[][] getNextArray() {
-        return nextArray.clone();
     }
 
     public String getNextString() {
