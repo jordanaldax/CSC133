@@ -203,8 +203,9 @@ public class JAPingPongArray {
             String[] rowsAndCols = myReader.readLine().trim().split("\\s+");
             ROWS = Integer.parseInt(rowsAndCols[0]);
             COLS = Integer.parseInt(rowsAndCols[1])+1;
-            liveArray = new int[ROWS][COLS];
             nextArray = new int[ROWS][COLS];
+            if(liveArray == null)
+                liveArray = new int[ROWS][COLS];
 
             // fill nextArray with default value
             for(int i = 0; i < ROWS; i++) {
