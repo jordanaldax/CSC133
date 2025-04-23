@@ -105,6 +105,16 @@ public class JAPingPongArray {
 
     public void printArray() {
         for (int i = 0; i < ROWS; i++) {
+            for (int j = 1; j < COLS; j++) {
+                System.out.print(liveArray[i][j] + " ");
+            }
+            System.out.println();
+        }
+        System.out.println();
+    }
+
+    public void printFullArray() {
+        for (int i = 0; i < ROWS; i++) {
             for (int j = 0; j < COLS; j++) {
                 System.out.print(liveArray[i][j] + " ");
             }
@@ -191,8 +201,10 @@ public class JAPingPongArray {
 
             // read max rows and columns
             String[] rowsAndCols = myReader.readLine().trim().split("\\s+");
-            int rows = Integer.parseInt(rowsAndCols[0]);
-            int cols = Integer.parseInt(rowsAndCols[1]+1);
+            ROWS = Integer.parseInt(rowsAndCols[0]);
+            COLS = Integer.parseInt(rowsAndCols[1])+1;
+            liveArray = new int[ROWS][COLS];
+            nextArray = new int[ROWS][COLS];
 
             // fill nextArray with default value
             for(int i = 0; i < ROWS; i++) {

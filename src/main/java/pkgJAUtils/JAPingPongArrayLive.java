@@ -26,13 +26,13 @@ public class JAPingPongArrayLive extends JAPingPongArray {
         addRandomLive();
     }
 
-    private void addRandomLive() {
+    protected void addRandomLive() {
         int live = liveCount;
-        int row = 0, col = 0;
+        int row = 0, col = 1;
         Random rand = new Random();
         while(live > 0) {
             row = rand.nextInt(ROWS);
-            col = rand.nextInt(COLS-1)+1;
+            col = rand.nextInt(COLS - 1) + 1;
             if(nextArray[row][col] != LIVE) {
                 makeLive(row, col);
                 live--;
@@ -40,11 +40,11 @@ public class JAPingPongArrayLive extends JAPingPongArray {
         }
     }
 
-    private void makeLive(int row, int col) {
+    protected void makeLive(int row, int col) {
         nextArray[row][col] = LIVE;
     }
 
-    private void makeDead(int row, int col) {
+    protected void makeDead(int row, int col) {
         nextArray[row][col] = DEAD;
     }
 
@@ -57,6 +57,44 @@ public class JAPingPongArrayLive extends JAPingPongArray {
                     nextArray[i][j] = DEAD;
             }
         }
+    }
+
+    public int countLiveNeighbors(int row, int col) {
+        int count = 0;
+
+        // top = row-1, col
+        if(row > 0 && liveArray[row-1][col] == LIVE)
+            count++;
+
+        // top-left = row-1, col-1
+        if(row > 0 && col > 0 && liveArray[row-1][col-1] == LIVE)
+            count++;
+
+        // top-right = row-1, col+1
+        if(row > 0 && col < COLS-1 && liveArray[row-1][col+1] == LIVE)
+            count++;
+
+        // bottom = row+1, col
+        if(row < ROWS-1 && liveArray[row+1][col] == LIVE)
+            count++;
+
+        // bottom-left = row+1, col-1
+        if(row < ROWS-1 && col > 0 && liveArray[row+1][col-1] == LIVE)
+            count++;
+
+        // bottom-right = row+1, col+1
+        if(row < ROWS-1 && col < COLS-1 && liveArray[row+1][col+1] == LIVE)
+            count++;
+
+        // left = row, col-1
+        if(col > 0 && liveArray[row][col-1] == LIVE)
+            count++;
+
+        // right = row, col+1
+        if(col < COLS-1 && liveArray[row][col+1] == LIVE)
+            count++;
+
+        return count;
     }
 
     // read from LIVE ARRAY
@@ -82,50 +120,18 @@ public class JAPingPongArrayLive extends JAPingPongArray {
         be doing it.
      */
     public int countLiveDegreeTwoNeighbors(int row, int col) {
-        int count = 0;
-
-        // top = row-1, col
-        if(row > 0 && liveArray[row-1][col] == LIVE)
-            count++;
-
-        // top-left = row-1, col-1
-        if(row > 0 && col > 0 && liveArray[row-1][col-1] == LIVE)
-            count++;
-
-        // top-right = row-1, col+1
-        if(row > 0 && col < COLS-1 && liveArray[row-1][col+1] == LIVE)
-            count++;
+        int count = countLiveNeighbors(row, col);
 
         // far top = row-2, col
         if(row > 1 && liveArray[row-2][col] == LIVE)
-            count++;
-
-        // bottom = row+1, col
-        if(row < ROWS-1 && liveArray[row+1][col] == LIVE)
-            count++;
-
-        // bottom-left = row+1, col-1
-        if(row < ROWS-1 && col > 0 && liveArray[row+1][col-1] == LIVE)
-            count++;
-
-        // bottom-right = row+1, col+1
-        if(row < ROWS-1 && col < COLS-1 && liveArray[row+1][col+1] == LIVE)
             count++;
 
         // far bottom = row+2, col
         if(row < ROWS-2 && liveArray[row+2][col] == LIVE)
             count++;
 
-        // left = row, col-1
-        if(col > 0 && liveArray[row][col-1] == LIVE)
-            count++;
-
         // far left = row, col-2
         if(col > 1 && liveArray[row][col-2] == LIVE)
-            count++;
-
-        // right = row, col+1
-        if(col < COLS-1 && liveArray[row][col+1] == LIVE)
             count++;
 
         // far right = row, col+2
@@ -135,7 +141,7 @@ public class JAPingPongArrayLive extends JAPingPongArray {
         return count;
     }
 
-    private void resetNextArray() {
+    protected void resetNextArray() {
         for(int i = 0; i < ROWS; i++) {
             for(int j = 1; j < COLS; j++) {
                 nextArray[i][j] = DEAD;
@@ -154,7 +160,7 @@ public class JAPingPongArrayLive extends JAPingPongArray {
 
     /* --- --- TESTING METHODS --- ---*/
 
-    private void printNextArray() {
+    protected void printNextArray() {
         System.out.println();
         for(int i = 0; i < ROWS; i++) {
             for(int j = 0; j < COLS; j++) {
@@ -163,6 +169,12 @@ public class JAPingPongArrayLive extends JAPingPongArray {
             System.out.println();
         }
         System.out.println();
+    }
+
+    public void testRandomLive() {
+        addRandomLive();
+        swapLiveAndNext();
+        printArray();
     }
 
     public void countNNTest() {
