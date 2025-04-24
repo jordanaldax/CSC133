@@ -5,7 +5,6 @@ import java.util.*;
 
 public class JAGoLArray extends JAPingPongArrayLive {
 
-    int liveCellCount;
 
     public JAGoLArray(final String myDataFile) {
         super();
@@ -16,7 +15,7 @@ public class JAGoLArray extends JAPingPongArrayLive {
         super();
         ROWS = rows;
         COLS = cols+1;
-        liveCellCount = (rows*cols)/2;
+        liveCount = (rows*cols)/2;
     }
 
     public JAGoLArray(int numRows, int numCols, int numAlive) {
@@ -73,7 +72,12 @@ public class JAGoLArray extends JAPingPongArrayLive {
         return retVal;
     }
 
-    private int getLiveCount() {
+    public int getLiveCount() {
+        liveCount();
+        return liveCount;
+    }
+
+    private int liveCount() {
         int count = 0;
         for(int row = 0; row < ROWS; row++) {
             for(int col = 1; col < COLS; col++) {
@@ -81,7 +85,7 @@ public class JAGoLArray extends JAPingPongArrayLive {
                     count++;
             }
         }
-        liveCellCount = count;
+        liveCount = count;
         return count;
     }
 
@@ -95,6 +99,16 @@ public class JAGoLArray extends JAPingPongArrayLive {
     }
 
     /* --- --- TESTING METHODS --- ---*/
+
+    public boolean liveCountTest() {
+        boolean retVal = false;
+        int c1 = getLiveCount();
+        int c2 = liveCount();
+        if(c1 != c2)
+            return retVal;
+        retVal = true;
+        return retVal;
+    }
 
     // testRun does 10 iterations to test the functionality of the methods
     public void testRun() {
