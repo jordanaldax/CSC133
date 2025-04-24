@@ -67,7 +67,7 @@ public class JAPingPongArrayLive extends JAPingPongArray {
             count++;
 
         // top-left = row-1, col-1
-        if(row > 0 && col > 0 && liveArray[row-1][col-1] == LIVE)
+        if(row > 0 && col > 1 && liveArray[row-1][col-1] == LIVE)
             count++;
 
         // top-right = row-1, col+1
@@ -79,7 +79,7 @@ public class JAPingPongArrayLive extends JAPingPongArray {
             count++;
 
         // bottom-left = row+1, col-1
-        if(row < ROWS-1 && col > 0 && liveArray[row+1][col-1] == LIVE)
+        if(row < ROWS-1 && col > 1 && liveArray[row+1][col-1] == LIVE)
             count++;
 
         // bottom-right = row+1, col+1
@@ -87,7 +87,7 @@ public class JAPingPongArrayLive extends JAPingPongArray {
             count++;
 
         // left = row, col-1
-        if(col > 0 && liveArray[row][col-1] == LIVE)
+        if(col > 1 && liveArray[row][col-1] == LIVE)
             count++;
 
         // right = row, col+1
@@ -131,7 +131,7 @@ public class JAPingPongArrayLive extends JAPingPongArray {
             count++;
 
         // far left = row, col-2
-        if(col > 1 && liveArray[row][col-2] == LIVE)
+        if(col > 2 && liveArray[row][col-2] == LIVE)
             count++;
 
         // far right = row, col+2

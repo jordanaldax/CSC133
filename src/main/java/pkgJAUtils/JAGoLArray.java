@@ -31,7 +31,8 @@ public class JAGoLArray extends JAPingPongArrayLive {
     private void onTickUpdate() {
         for(int row = 0; row < ROWS; row++) {
             for(int col = 1; col < COLS; col++) {
-                if(updateCell(countLiveNeighbors(row, col)) == LIVE) {
+                int nnCount = countLiveNeighbors(row, col);
+                if(updateCell(nnCount, liveArray[row][col]) == LIVE) {
                     nextArray[row][col] = LIVE;
                 } else {
                     nextArray[row][col] = DEAD;
@@ -40,8 +41,8 @@ public class JAGoLArray extends JAPingPongArrayLive {
         }
     }
 
-    private int updateCell(int nnCount) {
-        int retVal = DEAD;
+    private int updateCell(int nnCount, int status) {
+        int retVal = status;
 
         /*
             Rules:
