@@ -100,8 +100,8 @@ public class JAGoLArray extends JAPingPongArrayLive {
     public void testRun() {
         System.out.println("0th Iteration:");
         swapLiveAndNext();
-        printArray();
         System.out.println("Live Count: " + getLiveCount() + "\n");
+        printArray();
         for(int i = 1; i <= 10; i++) {
             onTickUpdate();
             swapLiveAndNext();
@@ -113,8 +113,8 @@ public class JAGoLArray extends JAPingPongArrayLive {
                 System.out.println(i + "rd Iteration:");
             else
                 System.out.println(i + "th Iteration:");
-            printArray();
             System.out.println("Live Count: " + getLiveCount() + "\n");
+            printArray();
         }
     }
 
