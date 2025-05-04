@@ -1,6 +1,7 @@
 package pkgJAAssignment_9;
 
 import pkgJAUtils.*;
+import pkgJARenderEngine.*;
 import java.io.*;
 import java.util.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -11,13 +12,43 @@ class Assignment9_Test {
 
     public static void main(String[] args) {
         //runTests();
-        testRun();
+        testRun2();
     }
 
     private static void testRun() {
-        JAGoLArray myBoard2 = new JAGoLArray("gol_input_1.txt");
-        System.out.println("Running Assignment9_Test");
+        JAGoLArray myBoard = new JAGoLArray("gol_input_1.txt");
+        JAGoLArray myBoard2 = new JAGoLArray(ROWS,COLS,LIVE_COUNT);
+
+        /*
+            With the loaded file, we should get the same results every time.
+            This allows us to make sure that the rules of the Game of Life
+            are being followed.
+         */
+        System.out.println("Running Assignment9_Test - loadFile Test");
+        myBoard.testRun();
+
+        /*
+            Without loading the file, we should get different results every
+            time. This lets us make sure that the randomization is working
+            correctly.
+         */
+        System.out.println("Running Assignment9_Test - Randomized Board Test");
         myBoard2.testRun();
+    }
+
+    private static void testRun2() {
+        JAGoLArray myBoard = new JAGoLArray("gol_input_1.txt");
+        myBoard.swapLiveAndNext();
+        ROWS = myBoard.getRows();
+        COLS = myBoard.getCols();
+        final int polyLength = 50, polyOffset = 10, polyPadding = 2;
+        final int winWidth = (polyLength + polyPadding) * COLS + 2 * polyOffset;
+        final int winHeight = (polyLength + polyPadding) * ROWS + 2 * polyOffset;
+        final int winOrgX = 50, winOrgY = 80;
+        final JAWindowManager myWM = JAWindowManager.get(winWidth, winHeight, winOrgX, winOrgY);
+        final JARenderer myRenderer = new JARenderer(myWM);
+        myRenderer.render(polyOffset, polyPadding, polyLength, ROWS, COLS, myBoard);
+
     }
 
     private static void runTests() {
@@ -44,6 +75,7 @@ class Assignment9_Test {
      */
     private static boolean ult_a() {
         boolean retVal = false;
+
         JAGoLArray myBoard = new JAGoLArray(ROWS,COLS,LIVE_COUNT);
 
         myBoard.loadFile("gol_input_1.txt");
@@ -52,6 +84,7 @@ class Assignment9_Test {
 
         String live = myBoard.getLiveString();
         String next = myBoard.getNextString();
+
         if(!live.equals(next))
             return retVal;
 
@@ -69,8 +102,10 @@ class Assignment9_Test {
      */
     private static boolean ult_b() {
         boolean retVal = false;
+
         JAGoLArray myBoard = new JAGoLArray(ROWS,COLS,LIVE_COUNT);
         myBoard.swapLiveAndNext();
+
         if(LIVE_COUNT == myBoard.getLiveCount())
             retVal = true;
         return retVal;
@@ -90,6 +125,7 @@ class Assignment9_Test {
      */
     private static boolean ult_c() {
         boolean retVal = false;
+
         JAGoLArray myBoard = new JAGoLArray(ROWS,COLS,LIVE_COUNT);
         JAGoLArray myBoard2 = new JAGoLArray(ROWS,COLS, LIVE_COUNT);
         myBoard.swapLiveAndNext();
@@ -97,13 +133,16 @@ class Assignment9_Test {
 
         String s1 = myBoard.getLiveString();
         String s2 = myBoard2.getLiveString();
+
         if(s1.equals(s2))
             return retVal;
 
         myBoard.swapLiveAndNext();
         myBoard.randomizeViaFisherYatesKnuth();
         myBoard.swapLiveAndNext();
+
         String fyk = myBoard.getLiveString();
+
         if(s1.equals(fyk))
             return retVal;
 
@@ -122,9 +161,12 @@ class Assignment9_Test {
      */
     private static boolean ult_d() {
         boolean retVal = false;
+
         JAGoLArray myBoard = new JAGoLArray(ROWS,COLS,LIVE_COUNT);
         myBoard.swapLiveAndNext();
+
         String[] randomResults = new String[10];
+
         for(int i = 0; i < randomResults.length; i++) {
             randomResults[i] = myBoard.getLiveString();
             myBoard.randomizeViaFisherYatesKnuth();

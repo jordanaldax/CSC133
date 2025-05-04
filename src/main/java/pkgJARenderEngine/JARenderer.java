@@ -1,5 +1,7 @@
 package pkgJARenderEngine;
 
+import pkgJAUtils.*;
+
 import org.joml.Matrix4f;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL;
@@ -34,6 +36,9 @@ public class JARenderer {
     private FloatBuffer myFloatBuffer = BufferUtils.createFloatBuffer(OGL_MATRIX_SIZE);
     private JAWindowManager myWM;
     private Matrix4f viewProjMatrix = new Matrix4f();
+
+    private JAGeometryManager myGM;
+    private final long SLEEP_INTERVAL = 40;
 
     int test = 0;
 
@@ -140,14 +145,28 @@ public class JARenderer {
     }
 
     private void renderObjects() {
-        while (!myWM.isGlfwWindowClosed()) {
+        //while (!myWM.isGlfwWindowClosed()) {
             glfwPollEvents();
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
             int vbo = glGenBuffers();
             int ibo = glGenBuffers();
 
-            float[] vertices = generateTilesVertices(NUM_ROWS, NUM_COLS);
-            int[] indices = generateTileIndices(NUM_ROWS, NUM_COLS);
+            /*
+                For our Game of Life, we will need to change the vertices
+                and indices that this method uses to the ones used from
+                GeometryManager.
+             */
+
+            float[] vertices;
+            int[] indices;
+
+            if(myGM == null) {
+                vertices = generateTilesVertices(NUM_ROWS, NUM_COLS);
+                indices = generateTileIndices(NUM_ROWS, NUM_COLS);
+            } else {
+                vertices = myGM.generateTilesVertices();
+                indices = myGM.generateTilesIndices();
+            }
 
             glBindBuffer(GL_ARRAY_BUFFER, vbo);
             glBufferData(GL_ARRAY_BUFFER, (FloatBuffer) BufferUtils.
@@ -168,7 +187,7 @@ public class JARenderer {
             final int VTD = indices.length;
             glDrawElements(GL_TRIANGLES, VTD, GL_UNSIGNED_INT, 0L);
             myWM.swapBuffers();
-        }
+        //}
     }
 
     public void render(final int offset, final int padding, final int size, final int numRows, final int numCols) {
@@ -183,13 +202,53 @@ public class JARenderer {
         myWM.destroyGlfwWindow();
     }
 
+    public void render(final int offset, final int padding, final int size, final int numRows, final int numCols, final JAGoLArray myPPA) {
+        this.OFFSET = offset;
+        this.PADDING = padding;
+        this.SIZE = size;
+        this.NUM_ROWS = numRows;
+        this.NUM_COLS = numCols;
+
+        myGM = new JAGeometryManager(NUM_ROWS,NUM_COLS,OFFSET,SIZE,PADDING,winWidthHeight);
+        myGM.getPPA(myPPA);
+
+        myWM.updateContextToThis();
+        renderLoop();
+        myWM.destroyGlfwWindow();
+    }
+
     private void renderLoop() {
-        glfwPollEvents();
+
         initOpenGL();
-        renderObjects();
+
+        long lastUpdateTime = System.currentTimeMillis();
+
         /* Process window messages in the main thread */
         while (!myWM.isGlfwWindowClosed()) {
-            glfwWaitEvents();
+            long startTime = System.currentTimeMillis();
+
+            glfwPollEvents();
+
+            if(startTime - lastUpdateTime >= SLEEP_INTERVAL) {
+                myGM.tickUpdate();
+                lastUpdateTime = startTime;
+            }
+
+            renderObjects();
+
+            long elapsedTime = System.currentTimeMillis() - startTime;
+            long sleepTime = SLEEP_INTERVAL - elapsedTime;
+
+            if(sleepTime > 0) {
+                try {
+                    Thread.sleep(sleepTime);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    break;
+                }
+            }
+
+            //glfwWaitEvents();
         }
     }
 

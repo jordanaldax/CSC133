@@ -91,11 +91,8 @@ public class JAGoLArray extends JAPingPongArrayLive {
 
     // will run the simulation when called
     public void run() {
-        while(true) {
-            onTickUpdate();
-            swapLiveAndNext();
-            printArray();
-        }
+        onTickUpdate();
+        swapLiveAndNext();
     }
 
     /* --- --- TESTING METHODS --- ---*/

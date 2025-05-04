@@ -147,6 +147,10 @@ public class JAPingPongArray {
         nextArray[row][col] = value;
     }
 
+    public int getCell(int row, int col) {
+        return liveArray[row][col];
+    }
+
     private void randomizeInRange() {
         Random rand = new Random();
 
