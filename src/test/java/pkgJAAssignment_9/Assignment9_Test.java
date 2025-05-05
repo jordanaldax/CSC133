@@ -11,7 +11,10 @@ class Assignment9_Test {
     static int ROWS = 10, COLS = ROWS, LIVE_COUNT = (int)(ROWS*COLS*0.5);
 
     public static void main(String[] args) {
-        runTests(args[0]);
+        if(args.length > 0)
+            runTests(args[0]);
+        else
+            runTests(null);
         //testRun3();
     }
 
@@ -79,6 +82,7 @@ class Assignment9_Test {
         System.out.println("ult_e: " + passOrFail(ult_e()));
         System.out.println("ult_f: " + passOrFail(ult_f()));
         System.out.println("ult_g: " + passOrFail(ult_g()));
+        System.out.println("ult_h: " + passOrFail(ult_h(s)));
     }
 
     private static String passOrFail(boolean retVal) {
@@ -302,16 +306,39 @@ class Assignment9_Test {
     }
 
     /*
-        ult_h tests the command line argument with creating a board. To
-        test this, we set the command line argument in the configuration
-        of the test in IntelliJ, and then compare it to another object
-        created using loadFile() with the same filename.
+        ult_h tests the command line argument. To test this, we set the command
+        line argument in the test configuration, and then compare it to a string.
 
-        The test passes if the liveArray strings of the boards are equal
-        to each other.
+        The test passes if the string in the command line argument matches
+        the filename "gol_input_1.txt".
      */
     private static boolean ult_h(String s) {
         boolean retVal = false;
+
+        if(!s.equals("gol_input_1.txt"))
+            return retVal;
+
+        retVal = true;
+        return retVal;
+    }
+
+    /*
+        ult_i tests the creation of a board using the command line argument.
+        To test this, we create a board using the command line argument.
+
+        The test passes if the liveArray string of the board created using
+        the command line argument matches the liveArray string of the board
+        created using the loadFile() function.
+     */
+    private static boolean ult_i(String s) {
+        boolean retVal = false;
+
+        JAGoLArray myBoard;
+
+        if(s == null)
+            myBoard = new JAGoLArray(ROWS,COLS,LIVE_COUNT);
+        else
+            myBoard = new JAGoLArray(s);
 
         retVal = true;
         return retVal;
