@@ -11,7 +11,7 @@ class Assignment9_Test {
     static int ROWS = 10, COLS = ROWS, LIVE_COUNT = (int)(ROWS*COLS*0.5);
 
     public static void main(String[] args) {
-        runTests();
+        runTests(args[0]);
         //testRun3();
     }
 
@@ -71,12 +71,14 @@ class Assignment9_Test {
         }
     }
 
-    private static void runTests() {
+    private static void runTests(String s) {
         System.out.println("ult_a: " + passOrFail(ult_a()));
         System.out.println("ult_b: " + passOrFail(ult_b()));
         System.out.println("ult_c: " + passOrFail(ult_c()));
         System.out.println("ult_d: " + passOrFail(ult_d()));
         System.out.println("ult_e: " + passOrFail(ult_e()));
+        System.out.println("ult_f: " + passOrFail(ult_f()));
+        System.out.println("ult_g: " + passOrFail(ult_g()));
     }
 
     private static String passOrFail(boolean retVal) {
@@ -215,7 +217,9 @@ class Assignment9_Test {
         and checking the array with the second file, which is the first
         array after one tick done manually.
 
-        The test passes if the
+        The test passes if the liveArray string of the first board after
+        the automated update matches the liveArray string of the second
+        board which has only loaded the file.
      */
     private static boolean ult_e() {
         boolean retVal = false;
@@ -233,6 +237,81 @@ class Assignment9_Test {
         if(!s1.equals(s2)) {
             return retVal;
         }
+
+        retVal = true;
+        return retVal;
+    }
+
+    /*
+        ult_f tests the creation of an OpenGL window through the
+        JAWindowManager class. To do this, we create a window using the
+        class, let it stay open for a bit, and then closing it.
+
+        The test passes if it successfully opens and destroys the window
+        without any problems.
+     */
+    private static boolean ult_f() {
+        boolean retVal = false;
+
+        int winWidth = 500;
+        int winHeight = 500;
+        int winOrgX = 50, winOrgY = 80;
+
+        try {
+            JAWindowManager wm = JAWindowManager.get(winWidth, winHeight, winOrgX, winOrgY);
+            wm.updateContextToThis();
+
+            Thread.sleep(500);
+
+            wm.destroyGlfwWindow();
+
+        } catch(Exception e) {
+            return false;
+        }
+
+        retVal = true;
+        return retVal;
+    }
+
+    /*
+        ult_g tests the save() method. To test this, we create a board,
+        save that board, and then create a second board loading the file
+        created by the first.
+
+        The test passes if the liveArray strings are equal to each other.
+     */
+    private static boolean ult_g() {
+        boolean retVal = false;
+
+        JAGoLArray myBoard = new JAGoLArray(ROWS,COLS,LIVE_COUNT);
+        myBoard.swapLiveAndNext();
+        myBoard.save("ult_g_verify.txt");
+
+        JAGoLArray myBoard2 = new JAGoLArray("ult_g_verify.txt");
+        myBoard2.swapLiveAndNext();
+
+        String s1 = myBoard.getLiveString();
+        String s2 = myBoard2.getLiveString();
+
+        if(!s1.equals(s2)) {
+            return retVal;
+        }
+
+        retVal = true;
+        return retVal;
+    }
+
+    /*
+        ult_h tests the command line argument with creating a board. To
+        test this, we set the command line argument in the configuration
+        of the test in IntelliJ, and then compare it to another object
+        created using loadFile() with the same filename.
+
+        The test passes if the liveArray strings of the boards are equal
+        to each other.
+     */
+    private static boolean ult_h(String s) {
+        boolean retVal = false;
 
         retVal = true;
         return retVal;
