@@ -11,8 +11,8 @@ class Assignment9_Test {
     static int ROWS = 10, COLS = ROWS, LIVE_COUNT = (int)(ROWS*COLS*0.5);
 
     public static void main(String[] args) {
-        //runTests();
-        testRun2();
+        runTests();
+        //testRun3();
     }
 
     private static void testRun() {
@@ -51,11 +51,32 @@ class Assignment9_Test {
 
     }
 
+    /*
+        I noticed that sometimes, on the edges of the screen, there would be
+        some live cells that should not be alive. In this particular case, the
+        right edge of the screen had two cells that had normalized, despite the
+        fact that it should be impossible. This test allows me to see whether
+        it's a rendering issue or a game logic issue.
+
+        This test run shows us that it's a rendering issue, because the array itself
+        has a valid construct that would be alive when normalized. The OpenGL version
+        at this point in time does not render the last two columns.
+     */
+    private static void testRun3() {
+        JAGoLArray myBoard = new JAGoLArray("ppa_data.txt");
+        myBoard.swapLiveAndNext();
+        while(true) {
+            myBoard.run();
+            myBoard.printArray();
+        }
+    }
+
     private static void runTests() {
         System.out.println("ult_a: " + passOrFail(ult_a()));
         System.out.println("ult_b: " + passOrFail(ult_b()));
         System.out.println("ult_c: " + passOrFail(ult_c()));
         System.out.println("ult_d: " + passOrFail(ult_d()));
+        System.out.println("ult_e: " + passOrFail(ult_e()));
     }
 
     private static String passOrFail(boolean retVal) {
@@ -176,6 +197,41 @@ class Assignment9_Test {
         for(int i = 1; i < randomResults.length; i++) {
             if(randomResults[i].equals(randomResults[i-1]))
                 return retVal;
+        }
+
+        retVal = true;
+        return retVal;
+    }
+
+    /*
+        ult_e tests the rules of the Game of Life to ensure that the
+        cells are following the rules.
+        The rules are:
+            1. If live neighbors < 2: DEAD
+            2. If live neighbors == 2 or == 3: Retain state (do nothing)
+            3. If live neighbors > 3: DEAD
+            4. If cell is DEAD and live neighbors == 3: LIVE
+        We test this by loading a specific file, running for one tick,
+        and checking the array with the second file, which is the first
+        array after one tick done manually.
+
+        The test passes if the
+     */
+    private static boolean ult_e() {
+        boolean retVal = false;
+
+        JAGoLArray myBoard = new JAGoLArray("ult_e_input.txt");
+        myBoard.swapLiveAndNext();
+        myBoard.run();
+
+        JAGoLArray myBoard2 = new JAGoLArray("ult_e_verify.txt");
+        myBoard2.swapLiveAndNext();
+
+        String s1 = myBoard.getLiveString();
+        String s2 = myBoard2.getLiveString();
+
+        if(!s1.equals(s2)) {
+            return retVal;
         }
 
         retVal = true;

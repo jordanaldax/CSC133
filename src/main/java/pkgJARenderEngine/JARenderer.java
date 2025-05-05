@@ -38,7 +38,7 @@ public class JARenderer {
     private Matrix4f viewProjMatrix = new Matrix4f();
 
     private JAGeometryManager myGM;
-    private final long SLEEP_INTERVAL = 40;
+    private final long SLEEP_INTERVAL = 50;
 
     int test = 0;
 

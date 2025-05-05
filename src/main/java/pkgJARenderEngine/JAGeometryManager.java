@@ -61,7 +61,7 @@ public class JAGeometryManager {
     protected boolean generateTilesVertices(float[] vertices) {
         int index = 0;
         for(int row = 0; row < NUM_ROWS; row++) {
-            for(int col = 1; col < NUM_COLS-1; col++) {
+            for(int col = 1; col < NUM_COLS; col++) {
 
                 float xmin = OFFSET + col * (SIZE + PADDING);
                 float ymin = winWidthHeight[1] - (OFFSET + SIZE + row * (SIZE + PADDING));
@@ -96,7 +96,7 @@ public class JAGeometryManager {
         int vertexOffset = 0;
 
         for(int row = 0; row < NUM_ROWS; row++) {
-            for(int col = 1; col < NUM_COLS-1; col++) {
+            for(int col = 1; col < NUM_COLS; col++) {
 
                 if(myPPArray.getCell(row, col) == LIVE) {
                     // First Triangle: Bottom Left, Bottom Right, Top Right

@@ -6,16 +6,30 @@ import java.util.*;
 public class JAGoLArray extends JAPingPongArrayLive {
 
 
+    /*
+        If we are creating the object by loading a file without calling
+        initializeArray() on the liveArray, then one of the arrays will
+        always be missing its row numbers. This problem was unnoticeable
+        at first, and became an issue with the creation of ult_e where
+        despite the two arrays having the same values, it wasn't returning
+        them being the same. I realized that this was because one of them
+        had the first column be completely full of 0, rather than row
+        numbers. Since the row numbers are given during initialization,
+        which this method originally skipped, one of the arrays would
+        always be missing its row numbers.
+     */
     public JAGoLArray(final String myDataFile) {
         super();
         loadFile(myDataFile);
+        initializeArray(liveArray);
     }
 
+    /*
+        If liveCells are not specified, then we automatically set
+        liveCount to 50% of the cells.
+     */
     public JAGoLArray(final int rows, final int cols) {
-        super();
-        ROWS = rows;
-        COLS = cols+1;
-        liveCount = (rows*cols)/2;
+        super(rows, cols, (rows*cols)/2);
     }
 
     public JAGoLArray(int numRows, int numCols, int numAlive) {
@@ -63,7 +77,6 @@ public class JAGoLArray extends JAPingPongArrayLive {
             the state of the cell when count == 3 because the cell will
             always be alive.
          */
-
         if(nnCount < 2 || nnCount > 3)
             retVal = DEAD;
         else if(nnCount == 3)
