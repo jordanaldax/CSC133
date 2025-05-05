@@ -83,6 +83,7 @@ class Assignment9_Test {
         System.out.println("ult_f: " + passOrFail(ult_f()));
         System.out.println("ult_g: " + passOrFail(ult_g()));
         System.out.println("ult_h: " + passOrFail(ult_h(s)));
+        System.out.println("ult_i: " + passOrFail(ult_i(s)));
     }
 
     private static String passOrFail(boolean retVal) {
@@ -232,7 +233,7 @@ class Assignment9_Test {
         myBoard.swapLiveAndNext();
         myBoard.run();
 
-        JAGoLArray myBoard2 = new JAGoLArray("ult_e_verify.txt");
+        JAGoLArray myBoard2 = new JAGoLArray("ult_e_verify_wrap.txt");
         myBoard2.swapLiveAndNext();
 
         String s1 = myBoard.getLiveString();
@@ -265,7 +266,7 @@ class Assignment9_Test {
             JAWindowManager wm = JAWindowManager.get(winWidth, winHeight, winOrgX, winOrgY);
             wm.updateContextToThis();
 
-            Thread.sleep(500);
+            Thread.sleep(100);
 
             wm.destroyGlfwWindow();
 
@@ -339,6 +340,18 @@ class Assignment9_Test {
             myBoard = new JAGoLArray(ROWS,COLS,LIVE_COUNT);
         else
             myBoard = new JAGoLArray(s);
+
+        myBoard.swapLiveAndNext();
+
+        JAGoLArray myBoard2 = new JAGoLArray("gol_input_1.txt");
+        myBoard2.swapLiveAndNext();
+
+        String s1 = myBoard.getLiveString();
+        String s2 = myBoard2.getLiveString();
+
+        if(!s1.equals(s2)) {
+            return retVal;
+        }
 
         retVal = true;
         return retVal;

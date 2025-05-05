@@ -6,23 +6,29 @@ import pkgJAUtils.JAWindowManager;
 
 public class Driver {
 
-    static int ROWS = 16, COLS = ROWS, LIVE_COUNT = (int)(ROWS*COLS*0.5);
+    static int ROWS = 100, COLS = ROWS, LIVE_COUNT = (int)(ROWS*COLS*0.2+0.5);
 
     public static void main(String[] args) {
-        JAGoLArray myBoard = new JAGoLArray("gol_input_1.txt");
-        //JAGoLArray myBoard = new JAGoLArray("ppa_data.txt");
-        //JAGoLArray myBoard = new JAGoLArray(ROWS, COLS, LIVE_COUNT);
-        //JAGoLArray myBoard = new JAGoLArray(ROWS,COLS);
+        JAGoLArray myBoard;
+
+        if(args.length > 0)
+            myBoard = new JAGoLArray(args[0]);
+        else
+            myBoard = new JAGoLArray(ROWS,COLS,LIVE_COUNT);
+
         myBoard.swapLiveAndNext();
-        //myBoard.save();
+        myBoard.save();
+
         ROWS = myBoard.getRows();
         COLS = myBoard.getCols() + 1;
-        final int polyLength = 500/ROWS, polyOffset = 2, polyPadding = 2;
+
         /*
             window size = polyOffset    // left margin
                           + COLS * (polyLength + polyPadding) // number of tiles plus the padding in between
                           + polyOffset  // right margin
          */
+
+        final int polyLength = 500/ROWS, polyOffset = 2, polyPadding = 2;
         final int winWidth = (polyLength + polyPadding) * COLS + 2 * polyOffset;
         final int winHeight = (polyLength + polyPadding) * ROWS + 2 * polyOffset;
         final int winOrgX = 50, winOrgY = 80;
