@@ -78,6 +78,20 @@ public class JAPingPongArray {
         return nextArray.clone();
     }
 
+    /*
+        getLiveString() creates a string of the liveArray.
+
+        Since we cannot simply say if(liveArray == nextArray), or
+        if(myBoard.getLiveArray() == myBoard2.getLiveArray()), as
+        these should always return false if the arrays are created
+        correctly, we need another form of comparison. Rather than
+        use the nested for loops to compare two 2D arrays each time,
+        I created the nested for loops here that create Strings of
+        the array. Those Strings are then compared to each other
+        using the .equals() method.
+
+        This method is used for test files.
+     */
     public String getLiveString() {
         String s = "";
         for(int i = 0; i < ROWS; i++) {
@@ -89,6 +103,11 @@ public class JAPingPongArray {
         return s;
     }
 
+    /*
+        getNextString() creates a string of the nextArray.
+
+        See getLiveString() for further explanation.
+     */
     public String getNextString() {
         String s = "";
         for(int i = 0; i < ROWS; i++) {
@@ -104,6 +123,9 @@ public class JAPingPongArray {
         nextArray = liveArray.clone();
     }
 
+    /*
+        printArray() prints the liveArray, excluding the row numbers.
+     */
     public void printArray() {
         for (int i = 0; i < ROWS; i++) {
             for (int j = 1; j < COLS; j++) {
@@ -114,6 +136,9 @@ public class JAPingPongArray {
         System.out.println();
     }
 
+    /*
+        printFullArray() prints the liveArray including the row numbers.
+     */
     public void printFullArray() {
         for (int i = 0; i < ROWS; i++) {
             for (int j = 0; j < COLS; j++) {
@@ -143,11 +168,28 @@ public class JAPingPongArray {
         System.out.println();
     }
 
+    /*
+        setCell() sets the cell in the nextArray at the specified row and
+        column with the specified value. The col is set to col++ because
+        the user should not be compensating for the row numbers, as they
+        shouldn't be able to see them. Therefore, wherever they set the
+        value should actually be one column up.
+
+        This method is only used in the drivers for Assignments 7 & 8.
+     */
     public void setCell(int row, int col, int value) {
         col++;
         nextArray[row][col] = value;
     }
 
+    /*
+        getCell() returns the value of the cell at the specified row and
+        column. col is not adjusted in this method because this method's
+        primary usage should be in other classes that need the value of
+        a particular cell, such as the GeometryManager, as PingPongArray
+        and its derivatives can simply call liveArray[row][col] instead
+        of using getCell().
+     */
     public int getCell(int row, int col) {
         return liveArray[row][col];
     }
@@ -163,6 +205,39 @@ public class JAPingPongArray {
         }
     }
 
+    /*
+        randomizeViaFisherYatesKnuth() uses the FYK algorithm to randomize
+        the array.
+
+        The FYK algorithm I used begins at the end of the array and moves its
+        way to the beginning.
+
+        Random Value: 5 (Swap index 6 & 5)
+        Step 0: [0][1][2][3][4][5][6]
+                                   ^
+        Random Value: 2 (Swap index 5 & 2)
+        Step 1: [0][1][6][3][4][2][5]
+                                ^
+        Random Value: 6 (Swap index 4 & 6)
+        Step 2: [0][1][6][3][5][2][4]
+                             ^
+        Random Value: 0 (Swap index 3 & 0)
+        Step 2: [3][1][6][0][5][2][4]
+                          ^
+        Random Value: 4 (Swap index 2 & 4)
+        Step 2: [3][1][5][0][6][2][4]
+                       ^
+        Random Value: 1 (Swap index 1 & 1)
+        Step 2: [3][1][5][0][6][2][4]
+                    ^
+        Random Value: 3 (Swap index 0 & 3)
+        Step 2: [0][1][5][3][6][2][4]
+                 ^
+
+        To do this randomization, I began with flattening the array,
+        excluding the first column of the liveArray. Then, I apply
+        the FYK algorithm to the entire flattened array.
+     */
     public void randomizeViaFisherYatesKnuth() {
         Random rand = new Random();
 
@@ -268,10 +343,14 @@ public class JAPingPongArray {
     /*
         findCSC133() finds the location of the CSC133 folder, which
         serves as the root folder for the files being loaded and saved
-        from the loadFile() and save() functions.
+        from the loadFile() and save() functions. It uses
+        searchForCSC133() to search through the directory and
+        subdirectories to find it.
 
         Since I cannot guarantee that the root will remain the same on
         another person's PC, this function looks for the root within
+        the program's directory and the subdirectories until it finds
+        it.
      */
     private File findCSC133() {
         File current = new File(System.getProperty("user.dir"));
@@ -299,6 +378,13 @@ public class JAPingPongArray {
         return null;
     }
 
+    /*
+        loadFile() loads the file specified in the String
+        passed as a parameter from the CSC133 folder. It
+        does this by calling findCSC133() before attempting
+        to load the file, then adding that result to the
+        front of the filename passed.
+     */
     public void loadFile(String filename) {
 
         File root = findCSC133();
@@ -349,6 +435,17 @@ public class JAPingPongArray {
         }
     }
 
+    /*
+        save() creates a file of the PingPongArray's liveArray
+        in its current state to a specified filename passed by
+        the user. This file is saved in the CSC133 folder using
+        the findCSC133() method to search for the path for the
+        CSC133 folder, then adding it to the beginning of the
+        filename.
+
+        If no filename is passed by the user, the save() function
+        will default to using "ppa_data.txt"
+     */
     public void save() {
         save("ppa_data.txt");
     }

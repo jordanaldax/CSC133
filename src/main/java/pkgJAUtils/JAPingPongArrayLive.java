@@ -63,6 +63,11 @@ public class JAPingPongArrayLive extends JAPingPongArray {
         }
     }
 
+    /*
+        countLiveNeighbors() counts the number of live neighbors of the
+        specified cells. This method checks the 1st degree neighbors,
+        meaning the eight cells surrounding the current cell.
+     */
     public int countLiveNeighbors(int row, int col) {
         int count = 0;
 

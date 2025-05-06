@@ -103,8 +103,18 @@ public class JAGoLArray extends JAPingPongArrayLive {
     }
 
     /*
-        liveCount() checks every cell in the liveArray and
-        returns the number of live cells.
+        liveCount() checks every cell in the liveArray and returns the number
+        of live cells.
+
+        I decided to use a nested for loop instead of keeping track of the live
+        cells through an instance variable because this is more reliable. I found
+        that for some reason, likely tied to my updateCell() being incorrect at
+        the time, tracking live cells with an instance variable almost always gave
+        me the wrong value. My current theory is that since my updateCell() always
+        sets certain values to live or dead, regardless of its current state, that
+        updating something like LIVE_COUNT at that time would produce incorrect
+        values. Rather than change the conditionals within my updateCell(), I opted
+        for this solution.
      */
     private int liveCount() {
         int count = 0;

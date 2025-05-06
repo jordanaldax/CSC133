@@ -31,6 +31,15 @@ public class JAGeometryManager {
         this.winWidthHeight = winWidthHeight;
     }
 
+    /*
+        getPPA() takes the GoLArray passed through its parameter
+        and sets its own GoLArray to it.
+
+        Since we are passing the GoLArray into the Renderer object,
+        which then creates the GeometryManager object, we need a way
+        for the GeometryManager to get the GoLArray data used to
+        create the vertices and indices.
+     */
     protected void getPPA(JAGoLArray myPPA) {
         this.myPPArray = myPPA;
     }
@@ -58,6 +67,13 @@ public class JAGeometryManager {
         return vertices;
     }
 
+    /*
+        generateTilesVertices() creates the vertices of only the
+        live cells. Most of the code is borrowed from the method
+        of the same name in the Renderer class. Differences
+        between the two are caused by me tweaking the code until
+        it works.
+     */
     protected boolean generateTilesVertices(float[] vertices) {
         int index = 0;
         for(int row = 0; row < NUM_ROWS; row++) {
@@ -88,6 +104,13 @@ public class JAGeometryManager {
         return true;
     }
 
+    /*
+        generateTilesIndices() creates the indices of only the
+        live cells. Most of the code is borrowed from the method
+        of the same name in the Renderer class. Differences
+        between the two are caused by me tweaking the code until
+        it works.
+     */
     protected int[] generateTilesIndices() {
         int liveCount = myPPArray.getLiveCount();
         int[] indices = new int[liveCount * IPT];
@@ -119,6 +142,10 @@ public class JAGeometryManager {
         return indices;
     }
 
+    /*
+        Honestly, I was unsure of what to do with this method,
+        so I simply didn't use it.
+     */
     protected boolean fillArrayWithTileVertices(float[] vertices, int startIndex, float xmin, float ymin) {
         return false;
     }
