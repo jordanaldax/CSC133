@@ -100,12 +100,14 @@ public class JAGeometryManager {
 
                 if(myPPArray.getCell(row, col) == LIVE) {
                     // First Triangle: Bottom Left, Bottom Right, Top Right
+                    // 0, 1, 2
                     indices[index++] = vertexOffset;
                     indices[index++] = vertexOffset + 1;
                     indices[index++] = vertexOffset + 2;
 
                     // Second Triangle: Bottom Left, Top Right, Top Left
-                    indices[index++] = vertexOffset ;
+                    // 0, 2, 3
+                    indices[index++] = vertexOffset;
                     indices[index++] = vertexOffset + 2;
                     indices[index++] = vertexOffset + 3;
 

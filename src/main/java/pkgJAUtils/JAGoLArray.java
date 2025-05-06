@@ -7,39 +7,37 @@ public class JAGoLArray extends JAPingPongArrayLive {
 
 
     /*
-        If we are creating the object by loading a file without calling
-        initializeArray() on the liveArray, then one of the arrays will
-        always be missing its row numbers. This problem was unnoticeable
-        at first, and became an issue with the creation of ult_e where
-        despite the two arrays having the same values, it wasn't returning
-        them being the same. I realized that this was because one of them
-        had the first column be completely full of 0, rather than row
-        numbers. Since the row numbers are given during initialization,
-        which this method originally skipped, one of the arrays would
-        always be missing its row numbers.
+        JAGoLArray(String filename) creates a JAGoLArray object
+        based on the file passed by calling the loadFile() function.
      */
     public JAGoLArray(final String myDataFile) {
         super();
         loadFile(myDataFile);
-        initializeArray(liveArray);
+        initializeArray(liveArray); // Initializes the liveArray with row numbers
     }
 
     /*
-        If liveCells are not specified, then we automatically set
-        liveCount to 50% of the cells.
+        JAGoLArray(int,int) creates a JAGoLArray object with a
+        pre-determined percentage of cells as being alive.
      */
     public JAGoLArray(final int rows, final int cols) {
-        super(rows, cols, (rows*cols)/2);
+        super(rows, cols, (int)(rows*cols*0.2+0.5));
     }
 
+    /*
+        JAGoLArray(int,int,int) creates a JAGoLArray object with
+        the number of live cells according to the parameter passed.
+        The live cells are added randomly.
+     */
     public JAGoLArray(int numRows, int numCols, int numAlive) {
         super(numRows, numCols, numAlive);
     }
 
     /*
-        We determine what happens to each cell during each tick update.
-        We need to check the live neighbors, and decide based on the GoL
-        ruleset whether the current cell is set to LIVE or DEAD.
+        onTickUpdate() uses the countLiveNeighborsWrap() function to
+        count the number of live neighbors, and then uses updateCell()
+        to get the rule set that determines whether the current cell
+        should retain its state or if it should swap states.
      */
     private void onTickUpdate() {
         for(int row = 0; row < ROWS; row++) {
@@ -54,6 +52,14 @@ public class JAGoLArray extends JAPingPongArrayLive {
         }
     }
 
+    /*
+        updateCell() takes the number of neighbors passed in the
+        parameter to be used in the rule set which determines what
+        the status of the cell should be. If it falls under one of
+        the rules, the cell's status is changed. Otherwise, it
+        returns the cell's current status, as it should remain the
+        same.
+     */
     private int updateCell(int nnCount, int status) {
         int retVal = status;
 
@@ -70,12 +76,18 @@ public class JAGoLArray extends JAPingPongArrayLive {
             else if(count == 3)
                 LIVE
 
-            This is because regardless of if the cell is alive or dead,
-            having 3 live neighbors will make the cell alive. If the cell
-            is already alive, it will retain that state. If it was dead,
-            it's made alive. Therefore, we don't need to bother checking
-            the state of the cell when count == 3 because the cell will
-            always be alive.
+            Rules 1 and 3 are condensed into the first part of the conditional.
+            Rule 4 is handled by the else if portion of the conditional.
+            Rule 2 is handled by the status passed in by parameter being returned,
+            therefore retaining its state.
+
+            Technically, part of rule 2 (If live neighbors == 3) is handled by
+            the else if portion of the conditional. But since a cell will always
+            be alive if there are exactly 3 neighbors, we can ignore adding
+            a conditional to check whether the cell is live or dead when it has
+            3 neighbors. This does mean that any cell that is already alive
+            will still pass through the else if part of the conditional, but
+            this doesn't really matter.
          */
         if(nnCount < 2 || nnCount > 3)
             retVal = DEAD;
@@ -90,6 +102,10 @@ public class JAGoLArray extends JAPingPongArrayLive {
         return liveCount;
     }
 
+    /*
+        liveCount() checks every cell in the liveArray and
+        returns the number of live cells.
+     */
     private int liveCount() {
         int count = 0;
         for(int row = 0; row < ROWS; row++) {
@@ -102,7 +118,12 @@ public class JAGoLArray extends JAPingPongArrayLive {
         return count;
     }
 
-    // will run the simulation when called
+    /*
+        run() runs a single step of the simulation by calling onTickUpdate()
+        and swapLiveAndNext(). Calling swapLiveAndNext() here is to simplify
+        the code written in the driver, since the array should always be
+        swapped after an update anyways.
+     */
     public void run() {
         onTickUpdate();
         swapLiveAndNext();

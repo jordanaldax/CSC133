@@ -1,6 +1,7 @@
 package pkgJAUtils;
 
 import java.io.*;
+import java.nio.file.*;
 import java.util.*;
 
 public class JAPingPongArray {
@@ -195,51 +196,6 @@ public class JAPingPongArray {
         }
     }
 
-    public void loadFile(String filename) {
-        try(BufferedReader myReader = new BufferedReader(new FileReader(filename))) {
-            String line;
-
-            // get default value
-            int defValue = Integer.parseInt(myReader.readLine().trim());
-            defaultValue = defValue;
-
-            // read max rows and columns
-            String[] rowsAndCols = myReader.readLine().trim().split("\\s+");
-            ROWS = Integer.parseInt(rowsAndCols[0]);
-            COLS = Integer.parseInt(rowsAndCols[1])+1;
-            nextArray = new int[ROWS][COLS];
-            if(liveArray == null)
-                liveArray = new int[ROWS][COLS];
-
-            // fill nextArray with default value
-            for(int i = 0; i < ROWS; i++) {
-                for(int j = 0; j < COLS; j++) {
-                    nextArray[i][j] = defaultValue;
-                }
-            }
-
-            // read data
-            while((line = myReader.readLine()) != null) {
-
-                // process each line
-                int[] readRow = Arrays.stream(line.split("\\s+")).mapToInt(Integer::parseInt).toArray();
-
-                // first value is row number
-                int curRow = readRow[0];
-
-                // set first value to row number
-                nextArray[curRow][0] = curRow;
-
-                // fill in data starting from column 1
-                for(int curCol = 1; curCol < readRow.length; curCol++) {
-                    nextArray[curRow][curCol] = readRow[curCol];
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
     // neighbors of a number are all adjacent values
     // should just be value to the top, bottom, left, and right of the current value
     // also needs to include the diagonal values
@@ -309,12 +265,100 @@ public class JAPingPongArray {
         }
     }
 
+    /*
+        findCSC133() finds the location of the CSC133 folder, which
+        serves as the root folder for the files being loaded and saved
+        from the loadFile() and save() functions.
+
+        Since I cannot guarantee that the root will remain the same on
+        another person's PC, this function looks for the root within
+     */
+    private File findCSC133() {
+        File current = new File(System.getProperty("user.dir"));
+        File result = searchForCSC133(current);
+        if(result == null) {
+            System.out.println("Could not find CSC133 folder.");
+        }
+        return result;
+    }
+
+    private File searchForCSC133(File dir) {
+        if(dir.getName().equals("CSC133")) {
+            return dir;
+        }
+
+        File[] subDirs = dir.listFiles(File::isDirectory);
+        if(subDirs != null) {
+            for(File subDir : subDirs) {
+                File found = searchForCSC133(subDir);
+                if(found != null) {
+                    return found;
+                }
+            }
+        }
+        return null;
+    }
+
+    public void loadFile(String filename) {
+
+        File root = findCSC133();
+        File targetFile = new File(root, filename);
+
+        // Original solution: just load filename directly
+        try(BufferedReader myReader = new BufferedReader(new FileReader(targetFile))) {
+            String line;
+
+            // get default value
+            int defValue = Integer.parseInt(myReader.readLine().trim());
+            defaultValue = defValue;
+
+            // read max rows and columns
+            String[] rowsAndCols = myReader.readLine().trim().split("\\s+");
+            ROWS = Integer.parseInt(rowsAndCols[0]);
+            COLS = Integer.parseInt(rowsAndCols[1])+1;
+            nextArray = new int[ROWS][COLS];
+            if(liveArray == null)
+                liveArray = new int[ROWS][COLS];
+
+            // fill nextArray with default value
+            for(int i = 0; i < ROWS; i++) {
+                for(int j = 0; j < COLS; j++) {
+                    nextArray[i][j] = defaultValue;
+                }
+            }
+
+            // read data
+            while((line = myReader.readLine()) != null) {
+
+                // process each line
+                int[] readRow = Arrays.stream(line.split("\\s+")).mapToInt(Integer::parseInt).toArray();
+
+                // first value is row number
+                int curRow = readRow[0];
+
+                // set first value to row number
+                nextArray[curRow][0] = curRow;
+
+                // fill in data starting from column 1
+                for(int curCol = 1; curCol < readRow.length; curCol++) {
+                    nextArray[curRow][curCol] = readRow[curCol];
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void save() {
         save("ppa_data.txt");
     }
 
     public void save(String filename) {
-        try(BufferedWriter writer = new BufferedWriter(new FileWriter(filename))) {
+
+        File root = findCSC133();
+        File targetFile = new File(root, filename);
+
+        try(BufferedWriter writer = new BufferedWriter(new FileWriter(targetFile))) {
             // being file with default value
             writer.write(String.valueOf(defaultValue));
             writer.newLine();

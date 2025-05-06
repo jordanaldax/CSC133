@@ -145,49 +145,54 @@ public class JARenderer {
     }
 
     private void renderObjects() {
-        //while (!myWM.isGlfwWindowClosed()) {
-            glfwPollEvents();
-            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-            int vbo = glGenBuffers();
-            int ibo = glGenBuffers();
+        glfwPollEvents();
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        int vbo = glGenBuffers();
+        int ibo = glGenBuffers();
 
-            /*
-                For our Game of Life, we will need to change the vertices
-                and indices that this method uses to the ones used from
-                GeometryManager.
-             */
+        /*
+            For our Game of Life, we will need to change the vertices
+            and indices that this method uses to the ones used from
+            GeometryManager.
+         */
 
-            float[] vertices;
-            int[] indices;
+        float[] vertices;
+        int[] indices;
 
-            if(myGM == null) {
-                vertices = generateTilesVertices(NUM_ROWS, NUM_COLS);
-                indices = generateTileIndices(NUM_ROWS, NUM_COLS);
-            } else {
-                vertices = myGM.generateTilesVertices();
-                indices = myGM.generateTilesIndices();
-            }
+        /*
+            If the user calls the render function that takes a GoLArray
+            as a parameter, then that function will create a GeometryManager
+            object. This conditional allows us to handle the scenario where
+            there is no GeometryManager object created, such as in Assignment
+            5. It also allows the class to still utilize its own generate
+            functions for vertices and indices.
+         */
+        if(myGM == null) {
+            vertices = generateTilesVertices(NUM_ROWS, NUM_COLS);
+            indices = generateTileIndices(NUM_ROWS, NUM_COLS);
+        } else {
+            vertices = myGM.generateTilesVertices();
+            indices = myGM.generateTilesIndices();
+        }
 
-            glBindBuffer(GL_ARRAY_BUFFER, vbo);
-            glBufferData(GL_ARRAY_BUFFER, (FloatBuffer) BufferUtils.
-                    createFloatBuffer(vertices.length).
-                    put(vertices).flip(), GL_STATIC_DRAW);
-            glEnableClientState(GL_VERTEX_ARRAY);
-            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
-            glBufferData(GL_ELEMENT_ARRAY_BUFFER, (IntBuffer) BufferUtils.
-                    createIntBuffer(indices.length).
-                    put(indices).flip(), GL_STATIC_DRAW);
-            glVertexPointer(2, GL_FLOAT, 0, 0L);
-            viewProjMatrix.setOrtho(0, winWidthHeight[0], 0, winWidthHeight[1], 0, 10);
-            glUniformMatrix4fv(vpMatLocation, false,
-                    viewProjMatrix.get(myFloatBuffer));
-            glUniform3f(renderColorLocation, 1.0f, 0.498f, 0.153f);
-            glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-            //final int VTD = 6; // need to process 6 Vertices To Draw 2 triangles
-            final int VTD = indices.length;
-            glDrawElements(GL_TRIANGLES, VTD, GL_UNSIGNED_INT, 0L);
-            myWM.swapBuffers();
-        //}
+        glBindBuffer(GL_ARRAY_BUFFER, vbo);
+        glBufferData(GL_ARRAY_BUFFER, (FloatBuffer) BufferUtils.
+                createFloatBuffer(vertices.length).
+                put(vertices).flip(), GL_STATIC_DRAW);
+        glEnableClientState(GL_VERTEX_ARRAY);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, (IntBuffer) BufferUtils.
+                createIntBuffer(indices.length).
+                put(indices).flip(), GL_STATIC_DRAW);
+        glVertexPointer(2, GL_FLOAT, 0, 0L);
+        viewProjMatrix.setOrtho(0, winWidthHeight[0], 0, winWidthHeight[1], 0, 10);
+        glUniformMatrix4fv(vpMatLocation, false,
+                viewProjMatrix.get(myFloatBuffer));
+        glUniform3f(renderColorLocation, 1.0f, 0.498f, 0.153f);
+        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+        final int VTD = indices.length;
+        glDrawElements(GL_TRIANGLES, VTD, GL_UNSIGNED_INT, 0L);
+        myWM.swapBuffers();
     }
 
     public void render(final int offset, final int padding, final int size, final int numRows, final int numCols) {

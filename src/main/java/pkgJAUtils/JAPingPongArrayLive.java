@@ -25,6 +25,11 @@ public class JAPingPongArrayLive extends JAPingPongArray {
         addRandomLive();
     }
 
+    /*
+        addRandomLive() randomly adds the number of live
+        cells specified in the liveCount variable using
+        the Random object.
+     */
     protected void addRandomLive() {
         int live = liveCount;
         int row = 0, col = 1;
@@ -97,13 +102,18 @@ public class JAPingPongArrayLive extends JAPingPongArray {
     }
 
     /*
-        Since my output for the game was very different, I tested a variety
-        of things. I made sure that the rules are being followed correctly,
-        it's excluding the first column, etc. So my final conclusion is that
-        the professor's version of the program must wrap to the beginning to
-        check the live neighbors.
+        countLiveNeighborsWrap() uses an algorithm to find the number of live
+        neighbors around the current cell and wraps around to the other side of
+        the board if the cell being inspected is on an edge of the board.
 
-        So this method is to count the live neighbors after wrapping.
+            [c] [c] [ ] [c]
+            [ ] [ ] [ ] [ ]
+            [c] [c] [ ] [c]
+            [X] [c] [ ] [c]
+
+            When the checking the neighbors for a corner, like X
+            in this scenario, we need to count the cells marked
+            with a c.
      */
     public int countLiveNeighborsWrap(int row, int col) {
         int count = 0;
@@ -131,68 +141,44 @@ public class JAPingPongArrayLive extends JAPingPongArray {
               = (100) % 100
               = 0
             Similarly, if col = 1, it needs to wrap to COLS-1, not col = 0
+
+            To solve this, we create a simple conditional to check the
+            value of c when col is on either edge. This conditional is
+            unnecessary for row, since there is no row that we want to
+            exclude.
          */
 
-
         for(int i = -1; i <= 1; i++) { // Checks row-1, row, and row+1
+
+            /*
+                Sets r to the row + i, which allows us to easily check the
+                rows above and below the current row. It will also wrap
+                around to the other side of the board if the row is on one
+                of the edges of the board.
+             */
             int r = (row + i + ROWS) % ROWS;
 
             for(int j = -1; j <= 1; j++) { // Checks col-1, col, and col+1
 
                 if(i == 0 && j == 0) continue; // Skip current cell
 
+                /*
+                    Sets c to the col + i, which allows us to easily check the
+                    columns to the left and right of the current column. It will
+                    also wrap to the other side of the board if the row is on one
+                    of the edges of the board.
+                 */
                 int c = (col + j + COLS) % COLS;
-                if(col == COLS-1 && c == 0)
+
+                if(col == COLS-1 && c == 0) // Check if c wrapped around to col 0, set to c = 1 instead
                     c = 1;
-                else if(col == 1 && c == 0)
+                else if(col == 1 && c == 0) // Check if c is supposed to wrap to COLS-1, set it to that
                     c = COLS-1;
 
                 if(liveArray[r][c] == LIVE)
                     count++;
             }
         }
-
-        /*
-            Conditions:
-            top-left:
-                row == 0, col == 1:
-                row == ROWS-1, col == COLS-1:
-                    wrap both row and col
-                row == 0, col > 1:
-                row == ROWS-1, col > 1:
-                    wrap row
-                row > 0, col == 1:
-                row > 0, col == COLS-1:
-                    wrap col
-
-                [-] [-] [ ] [-]
-                [ ] [ ] [ ] [ ]
-                [-] [-] [ ] [-]
-                [X] [-] [ ] [-]
-
-                When the checking the neighbors for a corner, like X
-                in this scenario, we need to count the cells marked -.
-         */
-        /*
-        int rowCheck = row;
-        int colCheck = col;
-        if(row == 0)
-            rowCheck = ROWS-1;
-        else if(row == ROWS-1)
-            rowCheck = 0;
-
-        if(col == 0)
-            colCheck = COLS-1;
-        else if(col == COLS-1)
-            colCheck = 1;
-
-        if(row != rowCheck && col != colCheck) { // row and col need to be wrapped if they aren't equal to rowCheck/colCheck
-            if(liveArray[rowCheck][colCheck] == LIVE)
-                count++;
-        }
-
-         */
-
         return count;
     }
 

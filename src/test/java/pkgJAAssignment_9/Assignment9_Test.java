@@ -82,8 +82,14 @@ class Assignment9_Test {
         System.out.println("ult_e: " + passOrFail(ult_e()));
         System.out.println("ult_f: " + passOrFail(ult_f()));
         System.out.println("ult_g: " + passOrFail(ult_g()));
-        System.out.println("ult_h: " + passOrFail(ult_h(s)));
-        System.out.println("ult_i: " + passOrFail(ult_i(s)));
+        if(s == null) {
+            System.out.println("ult_h: Missing command line argument.");
+            System.out.println("ult_i: Missing command line argument.");
+        } else {
+            System.out.println("ult_h: " + passOrFail(ult_h(s)));
+            System.out.println("ult_i: " + passOrFail(ult_i(s)));
+        }
+        System.out.println("ult_j: " + passOrFail(ult_j()));
     }
 
     private static String passOrFail(boolean retVal) {
@@ -279,9 +285,9 @@ class Assignment9_Test {
     }
 
     /*
-        ult_g tests the save() method. To test this, we create a board,
-        save that board, and then create a second board loading the file
-        created by the first.
+        ult_g tests the save() method. To test this, we create a random
+        board, save that board, and then create a second board by loading
+        the file created by the first.
 
         The test passes if the liveArray strings are equal to each other.
      */
@@ -316,6 +322,9 @@ class Assignment9_Test {
     private static boolean ult_h(String s) {
         boolean retVal = false;
 
+        if(s == null) {
+            return retVal;
+        }
         if(!s.equals("gol_input_1.txt"))
             return retVal;
 
@@ -336,9 +345,9 @@ class Assignment9_Test {
 
         JAGoLArray myBoard;
 
-        if(s == null)
-            myBoard = new JAGoLArray(ROWS,COLS,LIVE_COUNT);
-        else
+        if(s == null) {
+            return retVal;
+        } else
             myBoard = new JAGoLArray(s);
 
         myBoard.swapLiveAndNext();
@@ -352,6 +361,26 @@ class Assignment9_Test {
         if(!s1.equals(s2)) {
             return retVal;
         }
+
+        retVal = true;
+        return retVal;
+    }
+
+    /*
+        ult_j tests the creation of a board without setting a live count.
+        To test this, we simply create a board passing only ROWS and COLS
+        as parameters, and then calling getLiveCount() and comparing it
+        to the live count that should have been passed.
+     */
+    private static boolean ult_j() {
+        boolean retVal = false;
+
+        int liveCountCheck = (int)(ROWS*COLS*0.2+0.5);
+        JAGoLArray myBoard = new JAGoLArray(ROWS,COLS);
+        myBoard.swapLiveAndNext();
+
+        if(liveCountCheck != myBoard.getLiveCount())
+            return retVal;
 
         retVal = true;
         return retVal;
